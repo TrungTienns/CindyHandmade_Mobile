@@ -30,11 +30,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		8E69AE8B2FF5664E00364537 /* CindyHandmade */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CindyHandmade;
-			sourceTree = "<group>";
-		};
 		8E69AE992FF5665000364537 /* CindyHandmadeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CindyHandmadeTests;
@@ -43,6 +38,11 @@
 		8E69AEA32FF5665000364537 /* CindyHandmadeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CindyHandmadeUITests;
+			sourceTree = "<group>";
+		};
+		8E69AEE92FF62D2800364537 /* CindyHandmade */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CindyHandmade;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,7 +75,7 @@
 		8E69AE802FF5664E00364537 = {
 			isa = PBXGroup;
 			children = (
-				8E69AE8B2FF5664E00364537 /* CindyHandmade */,
+				8E69AEE92FF62D2800364537 /* CindyHandmade */,
 				8E69AE992FF5665000364537 /* CindyHandmadeTests */,
 				8E69AEA32FF5665000364537 /* CindyHandmadeUITests */,
 				8E69AE8A2FF5664E00364537 /* Products */,
@@ -108,7 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				8E69AE8B2FF5664E00364537 /* CindyHandmade */,
+				8E69AEE92FF62D2800364537 /* CindyHandmade */,
 			);
 			name = CindyHandmade;
 			packageProductDependencies = (
@@ -395,6 +395,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CH6GS35JAM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -426,6 +427,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CH6GS35JAM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
