@@ -6,14 +6,41 @@ protocol APIClient {
 
 class URLSessionAPIClient: APIClient {
     private let session: URLSession
+    private let tokenManager: TokenManager?
 
-    init(session: URLSession = .shared) {
+    init(session: URLSession = .shared, tokenManager: TokenManager? = nil) {
         self.session = session
+        self.tokenManager = tokenManager
     }
 
     func request<T: Decodable>(endpoint: APIEndpoint, responseType: T.Type) async throws -> T {
-        guard let request = endpoint.urlRequest else {
+        guard let url = URL(string: endpoint.baseURL + endpoint.path) else {
             throw APIError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.method.rawValue
+        
+        // Cấu hình Header
+        var allHeaders = endpoint.headers ?? [:]
+        if let token = tokenManager?.getToken() {
+            allHeaders["Authorization"] = "Bearer \(token)"
+        }
+        
+        let language = UserDefaults.standard.string(forKey: "language") ?? "en"
+        allHeaders["Accept-Language"] = language
+        
+        for (key, value) in allHeaders {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        // Cấu hình HTTP Body
+        if let parameters = endpoint.parameters, request.httpMethod != "GET" {
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
+            } catch {
+                throw APIError.unknown(error)
+            }
         }
 
         let (data, response): (Data, URLResponse)
@@ -30,16 +57,13 @@ class URLSessionAPIClient: APIClient {
         switch httpResponse.statusCode {
         case 200...299:
             if data.isEmpty {
-                // If it's empty, and T is e.g. EmptyResponse, we might need special handling.
-                // For now, assume if data is empty we might throw decoding error unless expected.
+               
                 if responseType == EmptyResponse.self {
                     return EmptyResponse() as! T
                 }
             }
             do {
                 let decoder = JSONDecoder()
-                // Assuming typical snake_case from backend, if not, remove or change this
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
                 return try decoder.decode(T.self, from: data)
             } catch {
                 throw APIError.decodingError(error)
@@ -52,5 +76,4 @@ class URLSessionAPIClient: APIClient {
     }
 }
 
-// A simple empty response struct in case some APIs return 204 or no body
 struct EmptyResponse: Decodable {}

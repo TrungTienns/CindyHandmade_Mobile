@@ -34,4 +34,11 @@ class ProductRepositoryImpl: ProductRepository {
             )
         }
     }
+    func getCategories() async throws -> [Category] {
+        let dtos = try await apiClient.request(endpoint: ProductEndpoint.getCategories, responseType: [CategoryDTO].self)
+        
+        return dtos.map { dto in
+            Category(id: dto.id, name: dto.name, description: dto.description)
+        }
+    }
 }

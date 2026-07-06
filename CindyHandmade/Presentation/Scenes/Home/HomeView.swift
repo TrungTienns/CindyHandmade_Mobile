@@ -4,10 +4,58 @@ import Combine
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var selectedTab: TabItem = .home
+    @State private var showLogin = false
+    @State private var navigateToAllProducts = false
+    @State private var showSideMenu = false
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack {
+            VStack(spacing: 0) {
             // Main Content Area
+            Group {
+                switch selectedTab {
+                case .home:
+                    homeContent
+                case .catalog:
+                    Text("Catalog Placeholder").frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .cart:
+                    Text("Cart Placeholder").frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .wishlist:
+                    WishlistView()
+                case .profile:
+                    ProfileView()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            // Custom Tab Bar
+            CustomTabBar(selectedTab: $selectedTab, cartBadgeCount: 1, onTabTapped: { tab in
+                if tab == .home && selectedTab == .home {
+                    // Pop to root (Home)
+                    navigateToAllProducts = false
+                }
+                selectedTab = tab
+            })
+            }
+            .ignoresSafeArea(.all, edges: .bottom)
+            .background(Color.appBackground.ignoresSafeArea())
+            .onAppear {
+                viewModel.fetchTopSellers()
+            }
+            .sheet(isPresented: $showLogin, onDismiss: {
+                viewModel.fetchTopSellers() // Refresh profile after login
+            }) {
+                LoginView()
+            }
+            
+            SideMenuView(isShowing: $showSideMenu)
+                .zIndex(1)
+        }
+    }
+    
+    // Main Home Content
+    private var homeContent: some View {
+        NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 32) {
                     // 1. Header
@@ -15,15 +63,41 @@ struct HomeView: View {
                     
                     // 2. Greeting & Hero Banner
                     VStack(alignment: .leading, spacing: 16) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Welcome back, Sarah.")
-                                .font(.custom("Georgia", size: 24))
-                                .fontWeight(.bold)
-                                .foregroundColor(.appText)
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                if viewModel.userName == "Guest" {
+                                    Text("welcome_guest")
+                                        .font(.custom("Georgia", size: 24))
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.appText)
+                                } else {
+                                    (Text("welcome_back") + Text(" \(viewModel.userName)."))
+                                        .font(.custom("Georgia", size: 24))
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.appText)
+                                }
+                                
+                                Text("find_cozy")
+                                    .font(.subheadline)
+                                    .foregroundColor(.appTextSecondary)
+                            }
                             
-                            Text("Find your next cozy companion.")
-                                .font(.subheadline)
-                                .foregroundColor(.appTextSecondary)
+                            Spacer()
+                            
+                            if viewModel.userName == "Guest" {
+                                Button(action: {
+                                    showLogin = true
+                                }) {
+                                    Text("login")
+                                }
+                                .font(.footnote)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.appPrimary)
+                                .cornerRadius(12)
+                            }
                         }
                         
                         HeroBannerView()
@@ -36,24 +110,24 @@ struct HomeView: View {
                     // 3. Top Sellers (from Backend)
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text("Top Sellers")
+                            Text("all_products")
                                 .font(.custom("Georgia", size: 22))
                                 .fontWeight(.bold)
                                 .foregroundColor(.appText)
                             
                             Spacer()
                             
-                            Button("View all") {
-                                viewModel.fetchTopSellers() // Refresh
+                            NavigationLink(destination: AllProductsView(), isActive: $navigateToAllProducts) {
+                                Text("view_all")
+                                    .font(.footnote)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.appTextSecondary)
+                                    .underline()
                             }
-                            .font(.footnote)
-                            .fontWeight(.medium)
-                            .foregroundColor(.appTextSecondary)
-                            .underline()
                         }
                         
                         if viewModel.isLoading && viewModel.topSellers.isEmpty {
-                            ProgressView("Đang tải dữ liệu...")
+                            ProgressView()
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .padding()
                         } else if let error = viewModel.errorMessage, viewModel.topSellers.isEmpty {
@@ -66,6 +140,7 @@ struct HomeView: View {
                                 HStack(spacing: 16) {
                                     ForEach(viewModel.topSellers) { product in
                                         ProductCardView(
+                                            productId: product.id,
                                             category: product.categoryName,
                                             name: product.name,
                                             price: product.formattedPrice,
@@ -83,7 +158,7 @@ struct HomeView: View {
                     
                     // 4. Explore Collections
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Explore Collections")
+                        Text("explore_collections")
                             .font(.custom("Georgia", size: 22))
                             .fontWeight(.bold)
                             .foregroundColor(.appText)
@@ -123,21 +198,18 @@ struct HomeView: View {
             .refreshable {
                 viewModel.fetchTopSellers()
             }
-            
-            // Custom Tab Bar
-            CustomTabBar(selectedTab: $selectedTab, cartBadgeCount: 1)
-        }
-        .ignoresSafeArea(.all, edges: .bottom)
-        .background(Color.appBackground.ignoresSafeArea())
-        .onAppear {
-            viewModel.fetchTopSellers()
+            .navigationBarHidden(true)
         }
     }
     
     // Header View Component
     private var headerSection: some View {
         HStack {
-            Button(action: {}) {
+            Button(action: {
+                withAnimation(.easeInOut) {
+                    showSideMenu = true
+                }
+            }) {
                 Image(systemName: "line.3.horizontal")
                     .font(.title2)
                     .foregroundColor(.appText)
@@ -145,7 +217,7 @@ struct HomeView: View {
             
             Spacer()
             
-            Text("Handmade with\nHeart")
+            Text("handmade_heart")
                 .font(.custom("Georgia", size: 20))
                 .fontWeight(.bold)
                 .foregroundColor(.appPrimary)

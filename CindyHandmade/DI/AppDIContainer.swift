@@ -5,11 +5,11 @@ class AppDIContainer {
     static let shared = AppDIContainer()
     
     let apiClient: APIClient
+    let tokenManager: TokenManager
     
     private init() {
-        // Initialize the URLSessionAPIClient
-        // In a real app, you might configure the URLSession here
-        self.apiClient = URLSessionAPIClient()
+        self.tokenManager = UserDefaultsTokenManager()
+        self.apiClient = URLSessionAPIClient(tokenManager: self.tokenManager)
     }
     
     // Repository Factories
@@ -17,8 +17,24 @@ class AppDIContainer {
         return ProductRepositoryImpl(apiClient: apiClient)
     }
     
+    func makeAuthRepository() -> AuthRepository {
+        return AuthRepositoryImpl(apiClient: apiClient, tokenManager: tokenManager)
+    }
+    
     // Use Case Factories
     func makeFetchProductsUseCase() -> FetchProductsUseCase {
         return DefaultFetchProductsUseCase(productRepository: makeProductRepository())
+    }
+    
+    func makeGetCategoriesUseCase() -> GetCategoriesUseCase {
+        return DefaultGetCategoriesUseCase(productRepository: makeProductRepository())
+    }
+    
+    func makeLoginUseCase() -> LoginUseCase {
+        return DefaultLoginUseCase(authRepository: makeAuthRepository())
+    }
+    
+    func makeGetProfileUseCase() -> GetProfileUseCase {
+        return DefaultGetProfileUseCase(authRepository: makeAuthRepository())
     }
 }

@@ -1,9 +1,10 @@
 import SwiftUI
 
-enum TabItem: Int, CaseIterable {
-    case home = 0
+enum TabItem: String, CaseIterable {
+    case home
     case catalog
     case cart
+    case wishlist
     case profile
     
     var iconName: String {
@@ -11,16 +12,18 @@ enum TabItem: Int, CaseIterable {
         case .home: return "house.fill"
         case .catalog: return "square.grid.2x2"
         case .cart: return "bag"
+        case .wishlist: return "heart"
         case .profile: return "person"
         }
     }
     
     var title: String {
         switch self {
-        case .home: return "Home"
-        case .catalog: return "Catalog"
-        case .cart: return "Cart"
-        case .profile: return "Profile"
+        case .home: return "home"
+        case .catalog: return "catalog"
+        case .cart: return "cart"
+        case .wishlist: return "wishlist"
+        case .profile: return "profile"
         }
     }
 }
@@ -28,6 +31,7 @@ enum TabItem: Int, CaseIterable {
 struct CustomTabBar: View {
     @Binding var selectedTab: TabItem
     var cartBadgeCount: Int = 0
+    var onTabTapped: ((TabItem) -> Void)? = nil
     
     var body: some View {
         HStack {
@@ -35,7 +39,11 @@ struct CustomTabBar: View {
                 Spacer()
                 
                 Button(action: {
-                    selectedTab = tab
+                    if let onTabTapped = onTabTapped {
+                        onTabTapped(tab)
+                    } else {
+                        selectedTab = tab
+                    }
                 }) {
                     VStack(spacing: 4) {
                         ZStack(alignment: .topTrailing) {
@@ -52,7 +60,7 @@ struct CustomTabBar: View {
                             }
                         }
                         
-                        Text(tab.title)
+                        Text(LocalizedStringKey(tab.title))
                             .font(.system(size: 10, weight: .medium))
                             .foregroundColor(selectedTab == tab ? .appText : .appTextSecondary)
                     }

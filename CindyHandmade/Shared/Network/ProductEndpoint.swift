@@ -2,21 +2,24 @@ import Foundation
 
 enum ProductEndpoint: APIEndpoint {
     case getProducts
+    case getCategories
     
     var baseURL: String {
-        return "http://localhost:8080/api"
+        return "http://192.168.2.90:8080/api"
     }
     
     var path: String {
         switch self {
         case .getProducts:
             return "/products"
+        case .getCategories:
+            return "/categories"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getProducts:
+        case .getProducts, .getCategories:
             return .get
         }
     }
