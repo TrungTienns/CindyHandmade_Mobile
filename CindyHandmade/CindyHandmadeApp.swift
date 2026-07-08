@@ -18,6 +18,7 @@ struct CindyHandmadeApp: App {
                 .preferredColorScheme(isDarkMode ? .dark : .light)
                 .environment(\.locale, .init(identifier: language))
                 .environmentObject(WishlistManager.shared)
+                .environmentObject(CartManager.shared)
         }
     }
 }

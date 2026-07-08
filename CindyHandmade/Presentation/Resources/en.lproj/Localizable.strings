@@ -22,3 +22,13 @@
 "version" = "Version 1.0.0";
 "handmade_heart" = "Handmade with\nHeart";
 "wishlist" = "Wishlist";
+"logout_confirm" = "Are you sure you want to log out?";
+"accept" = "Accept";
+"cancel" = "Cancel";
+"filter" = "Filter";
+"max_price" = "Max Price";
+"sort_by" = "Sort by";
+"none" = "None";
+"price_low_high" = "Price: Low to High";
+"price_high_low" = "Price: High to Low";
+"apply" = "Apply";

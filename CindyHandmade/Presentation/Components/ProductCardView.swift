@@ -34,6 +34,26 @@ struct ProductCardView: View {
                         .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
                 }
                 .padding(8)
+                
+                // Add to Cart Button
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            CartManager.shared.addToCart(productId: productId)
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.appPrimary)
+                                .clipShape(Circle())
+                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                        }
+                        .padding(6)
+                    }
+                }
             }
             
             // Text Content
@@ -43,14 +63,14 @@ struct ProductCardView: View {
                     .foregroundColor(.appTextSecondary)
                 
                 Text(name)
-                    .font(.subheadline)
+                    .font(.custom("Georgia", size: 15))
                     .fontWeight(.semibold)
                     .foregroundColor(.appText)
                     .lineLimit(1)
                 
                 Text(price)
-                    .font(.subheadline)
-                    .foregroundColor(.appTextSecondary)
+                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .foregroundColor(.appText)
             }
         }
         .frame(width: 140)
@@ -63,7 +83,7 @@ struct ProductCardView: View {
         category: "Amigurumi",
         name: "Little Brown Bear",
         price: "$24.00",
-        imageUrl: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?q=80&w=400&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1595341595379-cf1cb694ea1f?q=80&w=2320&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     )
     .environmentObject(WishlistManager.shared)
 }

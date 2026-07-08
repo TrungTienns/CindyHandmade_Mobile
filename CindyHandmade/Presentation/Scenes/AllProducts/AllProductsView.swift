@@ -5,6 +5,7 @@ struct AllProductsView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel = AllProductsViewModel()
     @State private var currentBannerIndex = 0
+    @State private var showFilterModal = false
     
     private let bannerImages = ["BannerProducts1", "BannerProducts2", "BannerProducts3"]
     private let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
@@ -85,8 +86,17 @@ struct AllProductsView: View {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(.gray)
                     TextField("search_product", text: $viewModel.searchText)
-                    Image(systemName: "slider.horizontal.3")
-                        .foregroundColor(.gray)
+                    
+                    Button(action: {
+                        showFilterModal = true
+                    }) {
+                        Image(systemName: "slider.horizontal.3")
+                            .foregroundColor(.appText)
+                            .padding(8)
+                            .background(Color.appCardBackground)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
+                    }
                 }
                 .padding()
                 .background(Color.appCardBackground)
@@ -167,6 +177,10 @@ struct AllProductsView: View {
         .navigationBarHidden(true)
         .onAppear {
             viewModel.fetchData()
+        }
+        .sheet(isPresented: $showFilterModal) {
+            FilterModalView(viewModel: viewModel)
+                .presentationDetents([.medium, .large])
         }
     }
 }

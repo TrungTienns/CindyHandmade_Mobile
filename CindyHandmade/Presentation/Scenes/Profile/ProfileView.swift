@@ -2,10 +2,13 @@ import SwiftUI
 
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
+    @State private var showingLogoutAlert = false
+    @State private var showLogin = false
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
+        ZStack {
+            ScrollView {
+                VStack(spacing: 20) {
                 if viewModel.isLoading && viewModel.user == nil {
                     ProgressView("Loading Profile...")
                         .padding(.top, 40)
@@ -24,6 +27,31 @@ struct ProfileView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             viewModel.fetchProfile()
+        }
+            .sheet(isPresented: $showLogin, onDismiss: {
+                viewModel.fetchProfile()
+            }) {
+                LoginView()
+            }
+            
+            if showingLogoutAlert {
+                CustomAlertView(
+                    message: "logout_confirm",
+                    primaryAction: {
+                        withAnimation {
+                            showingLogoutAlert = false
+                        }
+                        viewModel.logout()
+                        showLogin = true
+                    },
+                    secondaryAction: {
+                        withAnimation {
+                            showingLogoutAlert = false
+                        }
+                    }
+                )
+                .transition(.scale(scale: 1.1).combined(with: .opacity))
+            }
         }
     }
     
@@ -177,7 +205,9 @@ struct ProfileView: View {
             
             // Logout Button
             Button(action: {
-                viewModel.logout()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7, blendDuration: 0)) {
+                    showingLogoutAlert = true
+                }
             }) {
                 Text("Logout")
                     .font(.headline)

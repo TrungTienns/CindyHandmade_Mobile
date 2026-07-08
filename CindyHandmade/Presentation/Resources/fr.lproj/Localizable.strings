@@ -21,4 +21,14 @@
 "error_fetching" = "Impossible de charger les données.";
 "version" = "Version 1.0.0";
 "handmade_heart" = "Fait main avec\nAmour";
-"wishlist" = "Liste de souhaits";
+"wishlist" = "Favoris";
+"logout_confirm" = "Êtes-vous sûr de vouloir vous déconnecter ?";
+"accept" = "Accepter";
+"cancel" = "Annuler";
+"filter" = "Filtrer";
+"max_price" = "Prix maximum";
+"sort_by" = "Trier par";
+"none" = "Aucun";
+"price_low_high" = "Prix : Croissant";
+"price_high_low" = "Prix : Décroissant";
+"apply" = "Appliquer";

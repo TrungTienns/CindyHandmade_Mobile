@@ -48,7 +48,7 @@ struct CustomTabBar: View {
                     VStack(spacing: 4) {
                         ZStack(alignment: .topTrailing) {
                             Image(systemName: tab.iconName)
-                                .font(.system(size: 20))
+                                .font(.system(size: 20, weight: .semibold))
                                 .foregroundColor(selectedTab == tab ? .appText : .appTextSecondary)
                             
                             // Badge for Cart
@@ -61,11 +61,13 @@ struct CustomTabBar: View {
                         }
                         
                         Text(LocalizedStringKey(tab.title))
-                            .font(.system(size: 10, weight: .medium))
+                            .font(.system(size: 10, weight: .bold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
                             .foregroundColor(selectedTab == tab ? .appText : .appTextSecondary)
                     }
                     .padding(.vertical, 8)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 10)
                     // Active Background (Pill shape)
                     .background(
                         selectedTab == tab ? Color.appPrimary.opacity(0.3) : Color.clear

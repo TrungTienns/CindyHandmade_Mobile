@@ -168,7 +168,7 @@ struct HomeView: View {
                             ExploreCollectionCard(
                                 title: "Amigurumi",
                                 subtitle: "Plushies & Toys",
-                                imageUrl: "https://images.unsplash.com/photo-1596766440742-996fffd0e261?q=80&w=800&auto=format&fit=crop"
+                                imageUrl: "https://images.unsplash.com/photo-1595341595379-cf1cb694ea1f?q=80&w=2320&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             )
                             .frame(height: 140)
                             

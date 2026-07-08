@@ -1,6 +1,14 @@
 import Foundation
 import Combine
 
+enum SortOption: String, CaseIterable, Identifiable {
+    case none = "none"
+    case priceLowToHigh = "price_low_high"
+    case priceHighToLow = "price_high_low"
+    
+    var id: String { self.rawValue }
+}
+
 @MainActor
 class AllProductsViewModel: ObservableObject {
     @Published var products: [Product] = []
@@ -10,6 +18,9 @@ class AllProductsViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var selectedCategory: Category?
     @Published var searchText: String = ""
+    
+    @Published var maxPrice: Double = 5000000
+    @Published var sortOption: SortOption = .none
     
     private let fetchProductsUseCase: FetchProductsUseCase
     private let getCategoriesUseCase: GetCategoriesUseCase
@@ -25,12 +36,27 @@ class AllProductsViewModel: ObservableObject {
     var filteredProducts: [Product] {
         var result = products
         
+        // 1. Filter by category
         if let selected = selectedCategory, selected.id != 0 {
             result = result.filter { $0.categoryName == selected.name }
         }
         
+        // 2. Filter by search text
         if !searchText.isEmpty {
             result = result.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+        }
+        
+        // 3. Filter by max price
+        result = result.filter { $0.price <= maxPrice }
+        
+        // 4. Sort
+        switch sortOption {
+        case .none:
+            break
+        case .priceLowToHigh:
+            result.sort { $0.price < $1.price }
+        case .priceHighToLow:
+            result.sort { $0.price > $1.price }
         }
         
         return result
