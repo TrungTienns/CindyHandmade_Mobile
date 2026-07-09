@@ -19,7 +19,8 @@ class AllProductsViewModel: ObservableObject {
     @Published var selectedCategory: Category?
     @Published var searchText: String = ""
     
-    @Published var maxPrice: Double = 5000000
+    @Published var minPrice: Double = 0
+    @Published var maxPrice: Double = 20000000
     @Published var sortOption: SortOption = .none
     
     private let fetchProductsUseCase: FetchProductsUseCase
@@ -46,8 +47,8 @@ class AllProductsViewModel: ObservableObject {
             result = result.filter { $0.name.lowercased().contains(searchText.lowercased()) }
         }
         
-        // 3. Filter by max price
-        result = result.filter { $0.price <= maxPrice }
+        // 3. Filter by price range
+        result = result.filter { $0.price >= minPrice && $0.price <= maxPrice }
         
         // 4. Sort
         switch sortOption {

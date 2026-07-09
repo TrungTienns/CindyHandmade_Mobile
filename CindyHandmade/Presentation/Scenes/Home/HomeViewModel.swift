@@ -7,16 +7,20 @@ class HomeViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var userName: String = "Guest"
+    @Published var userRole: String = ""
     
     private let fetchProductsUseCase: FetchProductsUseCase
     private let getProfileUseCase: GetProfileUseCase
+    private let tokenManager: TokenManager
     
     init(
         fetchProductsUseCase: FetchProductsUseCase = AppDIContainer.shared.makeFetchProductsUseCase(),
-        getProfileUseCase: GetProfileUseCase = AppDIContainer.shared.makeGetProfileUseCase()
+        getProfileUseCase: GetProfileUseCase = AppDIContainer.shared.makeGetProfileUseCase(),
+        tokenManager: TokenManager = AppDIContainer.shared.tokenManager
     ) {
         self.fetchProductsUseCase = fetchProductsUseCase
         self.getProfileUseCase = getProfileUseCase
+        self.tokenManager = tokenManager
     }
     
     func fetchTopSellers() {
@@ -30,8 +34,10 @@ class HomeViewModel: ObservableObject {
             
             if let user = await profileResult {
                 self.userName = user.name
+                self.userRole = user.role
             } else {
                 self.userName = "Guest"
+                self.userRole = ""
             }
             
             if let products = await productsResult {
@@ -41,6 +47,13 @@ class HomeViewModel: ObservableObject {
             }
             
             self.isLoading = false
+            self.isLoading = false
         }
+    }
+    
+    func logout() {
+        tokenManager.deleteToken()
+        self.userName = "Guest"
+        self.userRole = ""
     }
 }

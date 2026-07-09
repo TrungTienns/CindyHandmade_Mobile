@@ -225,10 +225,40 @@ struct HomeView: View {
             
             Spacer()
             
-            Button(action: {}) {
-                Image(systemName: "bag")
-                    .font(.title2)
-                    .foregroundColor(.appText)
+            if viewModel.userName == "Guest" {
+                Button(action: {
+                    showLogin = true
+                }) {
+                    Image(systemName: "person.circle")
+                        .font(.title2)
+                        .foregroundColor(.appText)
+                }
+            } else {
+                Menu {
+                    Button(action: {
+                        selectedTab = .profile
+                    }) {
+                        Label("Hello, " + (viewModel.userName ?? "Guest"), systemImage: "person.crop.circle")
+                    }
+                    
+                    if viewModel.userRole.lowercased() == "admin" {
+                        Button(action: {
+                            // TODO: Navigate to Admin
+                        }) {
+                            Label("Admin", systemImage: "lock.shield")
+                        }
+                    }
+                    
+                    Button(role: .destructive, action: {
+                        viewModel.logout()
+                    }) {
+                        Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
+                    }
+                } label: {
+                    Image(systemName: "person.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.appPrimary)
+                }
             }
         }
     }

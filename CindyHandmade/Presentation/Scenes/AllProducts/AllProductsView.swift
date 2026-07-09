@@ -180,7 +180,7 @@ struct AllProductsView: View {
         }
         .sheet(isPresented: $showFilterModal) {
             FilterModalView(viewModel: viewModel)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.large])
         }
     }
 }

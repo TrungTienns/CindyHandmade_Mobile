@@ -6,4 +6,8 @@ struct UserDTO: Decodable {
     let email: String
     let role: String
     let token: String? // Trả về khi login/register
+    let avtImgurl: String?
+    let totalOrders: Int?
+    let totalReviews: Int?
+    let totalPoints: Int?
 }

@@ -32,3 +32,5 @@
 "price_low_high" = "Prix : Croissant";
 "price_high_low" = "Prix : Décroissant";
 "apply" = "Appliquer";
+"price_range" = "Fourchette de prix";
+"reset" = "Réinitialiser";

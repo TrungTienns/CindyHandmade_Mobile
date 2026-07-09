@@ -32,3 +32,5 @@
 "price_low_high" = "Price: Low to High";
 "price_high_low" = "Price: High to Low";
 "apply" = "Apply";
+"price_range" = "Price Range";
+"reset" = "Reset";
