@@ -1,4 +1,5 @@
 import Foundation
+import Security
 
 protocol TokenManager {
     func saveToken(_ token: String)
@@ -6,18 +7,54 @@ protocol TokenManager {
     func deleteToken()
 }
 
-class UserDefaultsTokenManager: TokenManager {
+class KeychainTokenManager: TokenManager {
     private let tokenKey = "jwt_token"
+    private let service = "com.cindyhandmade.app"
     
     func saveToken(_ token: String) {
-        UserDefaults.standard.set(token, forKey: tokenKey)
+        guard let data = token.data(using: .utf8) else { return }
+        
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: tokenKey
+        ]
+        
+        // Delete existing item if any before saving to avoid duplicate errors
+        SecItemDelete(query as CFDictionary)
+        
+        var addQuery = query
+        addQuery[kSecValueData as String] = data
+        
+        // Add new item
+        SecItemAdd(addQuery as CFDictionary, nil)
     }
     
     func getToken() -> String? {
-        return UserDefaults.standard.string(forKey: tokenKey)
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: tokenKey,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
+        
+        var dataTypeRef: AnyObject? = nil
+        let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
+        
+        if status == errSecSuccess, let data = dataTypeRef as? Data {
+            return String(data: data, encoding: .utf8)
+        }
+        return nil
     }
     
     func deleteToken() {
-        UserDefaults.standard.removeObject(forKey: tokenKey)
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: tokenKey
+        ]
+        
+        SecItemDelete(query as CFDictionary)
     }
 }

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct HeroBannerView: View {
+    var onShopNowTapped: (() -> Void)? = nil
+    
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             // Background Image
@@ -22,7 +24,7 @@ struct HeroBannerView: View {
             // Content
             VStack(alignment: .leading, spacing: 12) {
                 // Badge
-                Text("New Arrivals")
+                Text("new_arrivals")
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.white)
@@ -32,23 +34,23 @@ struct HeroBannerView: View {
                     .clipShape(Capsule())
                 
                 // Title
-                Text("Winter Cozy\nCollection")
+                Text("banner_title")
                     .font(.custom("Georgia", size: 28)) // Serif font
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .lineSpacing(4)
                 
                 // Description
-                Text("Wrap yourself in handmade warmth\nwith our latest chunky knit sweaters.")
+                Text("banner_description")
                     .font(.subheadline)
                     .foregroundColor(.white.opacity(0.9))
                     .lineLimit(2)
                 
                 // Button
                 Button(action: {
-                    // Action
+                    onShopNowTapped?()
                 }) {
-                    Text("Shop Now")
+                    Text("shop_now")
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundColor(.appText)

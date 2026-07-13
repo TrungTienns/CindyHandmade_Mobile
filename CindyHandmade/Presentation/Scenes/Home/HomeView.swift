@@ -8,6 +8,8 @@ struct HomeView: View {
     @State private var navigateToAllProducts = false
     @State private var showSideMenu = false
     
+    @EnvironmentObject var cartManager: CartManager
+    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -17,19 +19,23 @@ struct HomeView: View {
                 case .home:
                     homeContent
                 case .catalog:
-                    Text("Catalog Placeholder").frame(maxWidth: .infinity, maxHeight: .infinity)
+                    AllProductsView()
                 case .cart:
-                    Text("Cart Placeholder").frame(maxWidth: .infinity, maxHeight: .infinity)
+                    CartView()
                 case .wishlist:
                     WishlistView()
                 case .profile:
-                    ProfileView()
+                    ProfileView(onMenuTapped: {
+                        withAnimation(.easeInOut) {
+                            showSideMenu = true
+                        }
+                    })
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             // Custom Tab Bar
-            CustomTabBar(selectedTab: $selectedTab, cartBadgeCount: 1, onTabTapped: { tab in
+            CustomTabBar(selectedTab: $selectedTab, cartBadgeCount: cartManager.cart?.items.count ?? 0, onTabTapped: { tab in
                 if tab == .home && selectedTab == .home {
                     // Pop to root (Home)
                     navigateToAllProducts = false
@@ -50,6 +56,38 @@ struct HomeView: View {
             
             SideMenuView(isShowing: $showSideMenu)
                 .zIndex(1)
+            
+            // Success Alert Overlay
+            if cartManager.showSuccessMessage {
+                VStack {
+                    Spacer()
+                    HStack(spacing: 12) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.white)
+                            .font(.title3)
+                        Text("added_to_cart_success")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 14)
+                    .background(Color(UIColor(hex: "4A7056")).opacity(0.95))
+                    .clipShape(Capsule())
+                    .shadow(color: .black.opacity(0.15), radius: 10, y: 5)
+                    .padding(.bottom, 75)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .animation(.spring(), value: cartManager.showSuccessMessage)
+                .allowsHitTesting(false)
+                .zIndex(2)
+            }
+        }
+        .alert(LocalizedStringKey("error"), isPresented: $cartManager.showErrorAlert) {
+            Button(LocalizedStringKey("ok"), role: .cancel) { }
+        } message: {
+            Text(cartManager.errorMessage ?? NSLocalizedString("error_add_cart", comment: ""))
         }
     }
     
@@ -100,7 +138,9 @@ struct HomeView: View {
                             }
                         }
                         
-                        HeroBannerView()
+                        HeroBannerView(onShopNowTapped: {
+                            navigateToAllProducts = true
+                        })
                     }
                     
                     // Divider
@@ -117,7 +157,9 @@ struct HomeView: View {
                             
                             Spacer()
                             
-                            NavigationLink(destination: AllProductsView(), isActive: $navigateToAllProducts) {
+                            Button(action: {
+                                selectedTab = .catalog
+                            }) {
                                 Text("view_all")
                                     .font(.footnote)
                                     .fontWeight(.medium)

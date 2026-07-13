@@ -5,7 +5,7 @@ enum WishlistEndpoint: APIEndpoint {
     case toggleWishlist(productId: Int)
 
     var baseURL: String {
-        return "http://192.168.2.90:8080/api"
+        return AppEnvironment.baseURL
     }
 
     var path: String {

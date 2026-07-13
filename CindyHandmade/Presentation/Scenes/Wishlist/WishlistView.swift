@@ -31,7 +31,7 @@ struct WishlistView: View {
                                 Image(systemName: "heart.slash")
                                     .font(.system(size: 60))
                                     .foregroundColor(.gray)
-                                Text("Your wishlist is empty.")
+                                Text("wishlist_empty")
                                     .font(.headline)
                                     .foregroundColor(.appTextSecondary)
                             }
@@ -55,7 +55,6 @@ struct WishlistView: View {
                 .padding()
             }
             .background(Color.appBackground.ignoresSafeArea())
-            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {

@@ -4,9 +4,10 @@ enum AuthEndpoint: APIEndpoint {
     case login(parameters: [String: Any])
     case register(parameters: [String: Any])
     case getMe
+    case updateProfile(parameters: [String: Any])
     
     var baseURL: String {
-        return "http://192.168.2.90:8080/api/auth"
+        return AppEnvironment.baseURL + "/auth"
     }
     
     var path: String {
@@ -14,6 +15,7 @@ enum AuthEndpoint: APIEndpoint {
         case .login: return "/login"
         case .register: return "/register"
         case .getMe: return "/me"
+        case .updateProfile: return "/me"
         }
     }
     
@@ -21,6 +23,7 @@ enum AuthEndpoint: APIEndpoint {
         switch self {
         case .login, .register: return .post
         case .getMe: return .get
+        case .updateProfile: return .put
         }
     }
     
@@ -33,6 +36,7 @@ enum AuthEndpoint: APIEndpoint {
         case .login(let params): return params
         case .register(let params): return params
         case .getMe: return nil
+        case .updateProfile(let params): return params
         }
     }
 }

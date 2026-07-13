@@ -5,6 +5,16 @@ struct ProfileView: View {
     @State private var showingLogoutAlert = false
     @State private var showLogin = false
     
+    // Add environment object for cart
+    @EnvironmentObject var cartManager: CartManager
+    
+    // Callback for side menu
+    var onMenuTapped: (() -> Void)?
+    
+    // Edit Name State
+    @State private var showEditNameAlert = false
+    @State private var newName = ""
+    
     // Image Picker State
     enum ImagePickerType: Identifiable {
         case camera
@@ -24,7 +34,7 @@ struct ProfileView: View {
                     // Custom Navigation Bar
                     HStack {
                         Button(action: {
-                            // Menu action
+                            onMenuTapped?()
                         }) {
                             Image(systemName: "line.3.horizontal")
                                 .font(.title2)
@@ -33,7 +43,7 @@ struct ProfileView: View {
                         
                         Spacer()
                         
-                        Text("Handmade with Heart")
+                        Text("handmade_heart")
                             .font(.custom("Georgia", size: 24))
                             .fontWeight(.bold)
                             .foregroundColor(.appPrimary)
@@ -43,16 +53,25 @@ struct ProfileView: View {
                         Button(action: {
                             // Cart action
                         }) {
-                            Image(systemName: "bag")
-                                .font(.title2)
-                                .foregroundColor(.appText)
+                            ZStack(alignment: .topTrailing) {
+                                Image(systemName: "bag")
+                                    .font(.title2)
+                                    .foregroundColor(.appText)
+                                
+                                if let cart = cartManager.cart, !cart.items.isEmpty {
+                                    Circle()
+                                        .fill(Color.red)
+                                        .frame(width: 8, height: 8)
+                                        .offset(x: 2, y: -2)
+                                }
+                            }
                         }
                     }
                     .padding(.horizontal)
                     .padding(.top, 16)
                     
                     if viewModel.isLoading && viewModel.user == nil {
-                        ProgressView("Loading Profile...")
+                        ProgressView(LocalizedStringKey("loading_profile"))
                             .padding(.top, 40)
                     } else if let error = viewModel.errorMessage, viewModel.user == nil {
                         Text(error)
@@ -106,6 +125,27 @@ struct ProfileView: View {
                 avatarUrl: viewModel.user?.avatarUrl
             )
         }
+        .alert(LocalizedStringKey("edit_name"), isPresented: $showEditNameAlert) {
+            TextField(LocalizedStringKey("full_name"), text: $newName)
+            Button(LocalizedStringKey("cancel"), role: .cancel) { }
+            Button(LocalizedStringKey("save")) {
+                if !newName.isEmpty {
+                    viewModel.updateProfile(newName: newName) { _ in }
+                }
+            }
+        } message: {
+            Text("enter_new_name")
+        }
+        .alert(isPresented: Binding<Bool>(
+            get: { viewModel.errorMessage != nil && viewModel.user != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )) {
+            Alert(
+                title: Text(LocalizedStringKey("error")),
+                message: Text(viewModel.errorMessage ?? ""),
+                dismissButton: .default(Text(LocalizedStringKey("ok")))
+            )
+        }
     }
     
     private var profileContent: some View {
@@ -141,30 +181,42 @@ struct ProfileView: View {
                             .clipShape(Circle())
                     }
                 }
-                .contextMenu {
-                    Button(action: {
-                        showingFullImage = true
-                    }) {
-                        Label("View Image", systemImage: "photo")
-                    }
-                    Button(role: .destructive, action: {
-                        selectedImage = nil
-                    }) {
-                        Label("Delete Avatar", systemImage: "trash")
-                    }
-                }
                 .overlay(alignment: .bottomTrailing) {
                     // Edit Pencil Button
                     Menu {
                         Button(action: {
+                            newName = viewModel.user?.name ?? ""
+                            showEditNameAlert = true
+                        }) {
+                            Label("edit_name", systemImage: "pencil.line")
+                        }
+                        
+                        Divider()
+                        
+                        Button(action: {
+                            showingFullImage = true
+                        }) {
+                            Label("view_image", systemImage: "photo")
+                        }
+                        
+                        Button(action: {
                             activePicker = .camera
                         }) {
-                            Label("Camera", systemImage: "camera")
+                            Label("camera", systemImage: "camera")
                         }
+                        
                         Button(action: {
                             activePicker = .photoLibrary
                         }) {
-                            Label("Photo Library", systemImage: "photo.on.rectangle")
+                            Label("photo_library", systemImage: "photo.on.rectangle")
+                        }
+                        
+                        Divider()
+                        
+                        Button(role: .destructive, action: {
+                            selectedImage = nil
+                        }) {
+                            Label("delete_avatar", systemImage: "trash")
                         }
                     } label: {
                         Circle()
@@ -180,7 +232,7 @@ struct ProfileView: View {
                 }
                 
                 VStack(spacing: 4) {
-                    Text(viewModel.user?.name ?? "Unknown User")
+                    Text(viewModel.user?.name ?? NSLocalizedString("unknown_user", comment: ""))
                         .font(.custom("Georgia", size: 28))
                         .fontWeight(.bold)
                         .foregroundColor(.appText)
@@ -194,16 +246,16 @@ struct ProfileView: View {
             
             // Statistics Section
             HStack(spacing: 16) {
-                StatCard(value: "\(viewModel.user?.totalOrders ?? 12)", title: "Orders")
-                StatCard(value: "\(viewModel.user?.totalReviews ?? 8)", title: "Reviews")
-                StatCard(value: "\(viewModel.user?.totalPoints ?? 450)", title: "Points")
+                StatCard(value: "\(viewModel.user?.totalOrders ?? 12)", title: NSLocalizedString("orders", comment: ""))
+                StatCard(value: "\(viewModel.user?.totalReviews ?? 8)", title: NSLocalizedString("reviews", comment: ""))
+                StatCard(value: "\(viewModel.user?.totalPoints ?? 450)", title: NSLocalizedString("points", comment: ""))
             }
             .padding(.horizontal)
             
             // My Orders Section
             VStack(spacing: 20) {
                 HStack {
-                    Text("My Orders")
+                    Text("my_orders")
                         .font(.custom("Georgia", size: 20))
                         .fontWeight(.bold)
                         .foregroundColor(.appText)
@@ -214,7 +266,7 @@ struct ProfileView: View {
                         // View all action
                     }) {
                         HStack(spacing: 4) {
-                            Text("View All")
+                            Text("view_all")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.appTextSecondary)
@@ -226,13 +278,13 @@ struct ProfileView: View {
                 }
                 
                 HStack {
-                    OrderActionIcon(icon: "wallet.pass", title: "To Pay")
+                    OrderActionIcon(icon: "wallet.pass", title: NSLocalizedString("to_pay", comment: ""))
                     Spacer()
-                    OrderActionIcon(icon: "shippingbox", title: "To Ship")
+                    OrderActionIcon(icon: "shippingbox", title: NSLocalizedString("to_ship", comment: ""))
                     Spacer()
-                    OrderActionIcon(icon: "cube.box", title: "To Receive")
+                    OrderActionIcon(icon: "cube.box", title: NSLocalizedString("to_receive", comment: ""))
                     Spacer()
-                    OrderActionIcon(icon: "text.bubble", title: "To Review")
+                    OrderActionIcon(icon: "text.bubble", title: NSLocalizedString("to_review", comment: ""))
                 }
             }
             .padding(20)
@@ -242,11 +294,9 @@ struct ProfileView: View {
             
             // Settings List
             VStack(spacing: 0) {
-                MenuRow(icon: "person.crop.circle", title: "Edit Profile")
+                MenuRow(icon: "mappin.and.ellipse", title: NSLocalizedString("shipping_address", comment: ""))
                 Divider()
-                MenuRow(icon: "mappin.and.ellipse", title: "Shipping Address")
-                Divider()
-                MenuRow(icon: "rectangle.portrait.and.arrow.right", title: "Logout", isDestructive: true) {
+                MenuRow(icon: "rectangle.portrait.and.arrow.right", title: NSLocalizedString("logout", comment: ""), isDestructive: true) {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7, blendDuration: 0)) {
                         showingLogoutAlert = true
                     }

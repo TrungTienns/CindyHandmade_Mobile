@@ -45,4 +45,23 @@ class AuthRepositoryImpl: AuthRepository {
         let dto = try await apiClient.request(endpoint: AuthEndpoint.getMe, responseType: UserDTO.self)
         return User(id: dto.id, name: dto.name, email: dto.email, role: dto.role, avatarUrl: dto.avtImgurl, totalOrders: dto.totalOrders, totalReviews: dto.totalReviews, totalPoints: dto.totalPoints)
     }
+    
+    func updateProfile(name: String) async throws -> User {
+        let params: [String: Any] = [
+            "name": name
+        ]
+        
+        let dto = try await apiClient.request(endpoint: AuthEndpoint.updateProfile(parameters: params), responseType: UserDTO.self)
+        
+        return User(
+            id: dto.id,
+            name: dto.name,
+            email: dto.email,
+            role: dto.role,
+            avatarUrl: dto.avtImgurl,
+            totalOrders: dto.totalOrders,
+            totalReviews: dto.totalReviews,
+            totalPoints: dto.totalPoints
+        )
+    }
 }

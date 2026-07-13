@@ -8,7 +8,7 @@ class AppDIContainer {
     let tokenManager: TokenManager
     
     private init() {
-        self.tokenManager = UserDefaultsTokenManager()
+        self.tokenManager = KeychainTokenManager()
         self.apiClient = URLSessionAPIClient(tokenManager: self.tokenManager)
     }
     
@@ -36,5 +36,9 @@ class AppDIContainer {
     
     func makeGetProfileUseCase() -> GetProfileUseCase {
         return DefaultGetProfileUseCase(authRepository: makeAuthRepository())
+    }
+    
+    func makeUpdateProfileUseCase() -> UpdateProfileUseCase {
+        return DefaultUpdateProfileUseCase(authRepository: makeAuthRepository())
     }
 }

@@ -33,7 +33,7 @@ struct LoginView: View {
                 
                 // Sign In State
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Sign in")
+                    Text("sign_in")
                         .font(.system(size: 40, weight: .bold))
                         .foregroundColor(.appText)
                         .padding(.bottom, 10)
@@ -41,7 +41,7 @@ struct LoginView: View {
                     VStack(spacing: 24) {
                         // Email Field
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Email")
+                            Text("email")
                                 .font(.caption)
                                 .fontWeight(.bold)
                                 .foregroundColor(.appTextSecondary)
@@ -60,7 +60,7 @@ struct LoginView: View {
                         
                         // Password Field
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Password")
+                            Text("password")
                                 .font(.caption)
                                 .fontWeight(.bold)
                                 .foregroundColor(.appTextSecondary)
@@ -68,7 +68,7 @@ struct LoginView: View {
                             HStack {
                                 Image(systemName: "lock")
                                     .foregroundColor(focusedField == .password ? .appPrimary : .gray)
-                                SecureField("enter your password", text: $viewModel.password)
+                                SecureField(NSLocalizedString("enter_password", comment: ""), text: $viewModel.password)
                                     .focused($focusedField, equals: .password)
                                 Image(systemName: "eye.slash") // Placeholder for eye icon
                                     .foregroundColor(.gray)
@@ -79,7 +79,7 @@ struct LoginView: View {
                         
                         HStack {
                             Spacer()
-                            Text("Forgot Password?")
+                            Text("forgot_password")
                                 .font(.caption)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.appPrimary)
@@ -102,7 +102,7 @@ struct LoginView: View {
                                 .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                 .frame(maxWidth: .infinity)
                         } else {
-                            Text("Login")
+                            Text("login")
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                         }
@@ -116,10 +116,10 @@ struct LoginView: View {
                     
                     HStack {
                         Spacer()
-                        Text("Don't have an Account ? ")
+                        Text("no_account")
                             .font(.caption)
                             .foregroundColor(.appTextSecondary)
-                        + Text("Sign up")
+                        + Text("sign_up")
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundColor(.appPrimary)
