@@ -21,15 +21,19 @@ struct HomeView: View {
                 case .catalog:
                     AllProductsView()
                 case .cart:
-                    CartView()
+                    NavigationView {
+                        CartView()
+                    }
                 case .wishlist:
                     WishlistView()
                 case .profile:
-                    ProfileView(onMenuTapped: {
-                        withAnimation(.easeInOut) {
-                            showSideMenu = true
-                        }
-                    })
+                    NavigationView {
+                        ProfileView(onMenuTapped: {
+                            withAnimation(.easeInOut) {
+                                showSideMenu = true
+                            }
+                        })
+                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

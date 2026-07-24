@@ -113,9 +113,7 @@ struct CartView: View {
                     
                     summaryRow(title: NSLocalizedString("total", comment: ""), value: formattedPrice(total), isTotal: true)
                     
-                    Button(action: {
-                        // Checkout action
-                    }) {
+                    NavigationLink(destination: CheckoutView()) {
                         Text("continue_checkout")
                             .font(.headline)
                             .foregroundColor(.white)
@@ -132,6 +130,7 @@ struct CartView: View {
                 .ignoresSafeArea(edges: .bottom)
             }
         }
+        .navigationBarHidden(true)
         .onAppear {
             cartManager.fetchCart()
         }

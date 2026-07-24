@@ -41,4 +41,25 @@ class AppDIContainer {
     func makeUpdateProfileUseCase() -> UpdateProfileUseCase {
         return DefaultUpdateProfileUseCase(authRepository: makeAuthRepository())
     }
+    
+    // Checkout & Location
+    func makeLocationRepository() -> LocationRepository {
+        return LocationRepositoryImpl(apiClient: apiClient)
+    }
+    
+    func makeOrderRepository() -> OrderRepository {
+        return OrderRepositoryImpl(apiClient: apiClient)
+    }
+    
+    func makeFetchLocationsUseCase() -> FetchLocationsUseCase {
+        return FetchLocationsUseCase(repository: makeLocationRepository())
+    }
+    
+    func makeCheckoutUseCase() -> CheckoutUseCase {
+        return CheckoutUseCase(repository: makeOrderRepository())
+    }
+    
+    func makeGetMyOrdersUseCase() -> GetMyOrdersUseCase {
+        return GetMyOrdersUseCase(repository: makeOrderRepository())
+    }
 }

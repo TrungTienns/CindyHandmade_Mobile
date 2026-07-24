@@ -294,6 +294,10 @@ struct ProfileView: View {
             
             // Settings List
             VStack(spacing: 0) {
+                NavigationLink(destination: OrderHistoryView()) {
+                    MenuRow(icon: "doc.text.magnifyingglass", title: "Order History")
+                }
+                Divider()
                 MenuRow(icon: "mappin.and.ellipse", title: NSLocalizedString("shipping_address", comment: ""))
                 Divider()
                 MenuRow(icon: "rectangle.portrait.and.arrow.right", title: NSLocalizedString("logout", comment: ""), isDestructive: true) {
@@ -417,30 +421,36 @@ struct MenuRow: View {
     var action: (() -> Void)? = nil
     
     var body: some View {
-        Button(action: {
-            action?()
-        }) {
-            HStack(spacing: 16) {
-                Image(systemName: icon)
-                    .font(.system(size: 20))
-                    .foregroundColor(isDestructive ? .red : .appText)
-                    .frame(width: 24)
-                
-                Text(title)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(isDestructive ? .red : .appText)
-                
-                Spacer()
-                
-                if !isDestructive {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.gray.opacity(0.5))
-                }
+        if let action = action {
+            Button(action: action) {
+                rowContent
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 20)
+        } else {
+            rowContent
         }
+    }
+    
+    private var rowContent: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(isDestructive ? .red : .appText)
+                .frame(width: 24)
+            
+            Text(title)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(isDestructive ? .red : .appText)
+            
+            Spacer()
+            
+            if !isDestructive {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.gray.opacity(0.5))
+            }
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 20)
     }
 }
 

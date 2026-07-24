@@ -83,4 +83,9 @@ class CartManager: ObservableObject {
             }
         }
     }
+    
+    func clearCart() {
+        // Backend clears the cart upon checkout, so we just refetch
+        fetchCart()
+    }
 }
