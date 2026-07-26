@@ -7,5 +7,6 @@ struct Product: Identifiable, Equatable {
     let price: Double
     let formattedPrice: String
     let imageUrl: String
+    let images: [String]
     let categoryName: String
 }

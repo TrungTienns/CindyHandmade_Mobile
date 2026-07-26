@@ -34,6 +34,10 @@ class AppDIContainer {
         return DefaultLoginUseCase(authRepository: makeAuthRepository())
     }
     
+    func makeRegisterUseCase() -> RegisterUseCase {
+        return DefaultRegisterUseCase(authRepository: makeAuthRepository())
+    }
+    
     func makeGetProfileUseCase() -> GetProfileUseCase {
         return DefaultGetProfileUseCase(authRepository: makeAuthRepository())
     }

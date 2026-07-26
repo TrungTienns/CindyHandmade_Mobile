@@ -11,14 +11,22 @@ import SwiftUI
 struct CindyHandmadeApp: App {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("language") private var language = "en"
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .preferredColorScheme(isDarkMode ? .dark : .light)
-                .environment(\.locale, .init(identifier: language))
-                .environmentObject(WishlistManager.shared)
-                .environmentObject(CartManager.shared)
+            Group {
+                if hasSeenOnboarding {
+                    MainView()
+                } else {
+                    OnboardingView()
+                }
+            }
+            .preferredColorScheme(isDarkMode ? .dark : .light)
+            .environment(\.locale, .init(identifier: language))
+            .environmentObject(WishlistManager.shared)
+            .environmentObject(CartManager.shared)
+            .environmentObject(AddressManager.shared)
         }
     }
 }

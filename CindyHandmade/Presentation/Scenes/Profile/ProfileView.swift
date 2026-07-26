@@ -73,10 +73,21 @@ struct ProfileView: View {
                     if viewModel.isLoading && viewModel.user == nil {
                         ProgressView(LocalizedStringKey("loading_profile"))
                             .padding(.top, 40)
-                    } else if let error = viewModel.errorMessage, viewModel.user == nil {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .padding(.top, 40)
+                    } else if viewModel.errorMessage != nil && viewModel.user == nil {
+                        VStack {
+                            LoginPromptView(
+                                iconName: "person.crop.circle.badge.questionmark",
+                                titleKey: "login_required_title",
+                                descriptionKey: "login_required_desc_profile",
+                                onLoginTapped: {
+                                    showLogin = true
+                                }
+                            )
+                            NavigationLink(destination: LoginView(), isActive: $showLogin) {
+                                EmptyView()
+                            }
+                            .hidden()
+                        }
                     } else {
                         profileContent
                     }
@@ -106,11 +117,6 @@ struct ProfileView: View {
         .navigationBarHidden(true)
         .onAppear {
             viewModel.fetchProfile()
-        }
-        .sheet(isPresented: $showLogin, onDismiss: {
-            viewModel.fetchProfile()
-        }) {
-            LoginView()
         }
         .fullScreenCover(item: $activePicker) { pickerType in
             ImagePicker(
@@ -262,9 +268,7 @@ struct ProfileView: View {
                     
                     Spacer()
                     
-                    Button(action: {
-                        // View all action
-                    }) {
+                    NavigationLink(destination: OrderHistoryView(selectedTab: .all)) {
                         HStack(spacing: 4) {
                             Text("view_all")
                                 .font(.subheadline)
@@ -278,13 +282,13 @@ struct ProfileView: View {
                 }
                 
                 HStack {
-                    OrderActionIcon(icon: "wallet.pass", title: NSLocalizedString("to_pay", comment: ""))
+                    OrderActionIcon(icon: "wallet.pass", title: NSLocalizedString("to_pay", comment: ""), tab: .toPay)
                     Spacer()
-                    OrderActionIcon(icon: "shippingbox", title: NSLocalizedString("to_ship", comment: ""))
+                    OrderActionIcon(icon: "shippingbox", title: NSLocalizedString("to_ship", comment: ""), tab: .toShip)
                     Spacer()
-                    OrderActionIcon(icon: "cube.box", title: NSLocalizedString("to_receive", comment: ""))
+                    OrderActionIcon(icon: "cube.box", title: NSLocalizedString("to_receive", comment: ""), tab: .toReceive)
                     Spacer()
-                    OrderActionIcon(icon: "text.bubble", title: NSLocalizedString("to_review", comment: ""))
+                    OrderActionIcon(icon: "text.bubble", title: NSLocalizedString("to_review", comment: ""), tab: .completed)
                 }
             }
             .padding(20)
@@ -294,11 +298,13 @@ struct ProfileView: View {
             
             // Settings List
             VStack(spacing: 0) {
-                NavigationLink(destination: OrderHistoryView()) {
-                    MenuRow(icon: "doc.text.magnifyingglass", title: "Order History")
+                NavigationLink(destination: OrderHistoryView(selectedTab: .all)) {
+                    MenuRow(icon: "doc.text.magnifyingglass", title: NSLocalizedString("orders", comment: ""))
                 }
                 Divider()
-                MenuRow(icon: "mappin.and.ellipse", title: NSLocalizedString("shipping_address", comment: ""))
+                NavigationLink(destination: AddressBookView()) {
+                    MenuRow(icon: "mappin.and.ellipse", title: NSLocalizedString("shipping_address", comment: ""))
+                }
                 Divider()
                 MenuRow(icon: "rectangle.portrait.and.arrow.right", title: NSLocalizedString("logout", comment: ""), isDestructive: true) {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7, blendDuration: 0)) {
@@ -391,11 +397,10 @@ struct FullScreenImageView: View {
 struct OrderActionIcon: View {
     let icon: String
     let title: String
+    let tab: OrderTabStatus
     
     var body: some View {
-        Button(action: {
-            // Action
-        }) {
+        NavigationLink(destination: OrderHistoryView(selectedTab: tab)) {
             VStack(spacing: 8) {
                 Circle()
                     .fill(Color.appPrimary.opacity(0.1))
@@ -411,6 +416,7 @@ struct OrderActionIcon: View {
                     .foregroundColor(.appTextSecondary)
             }
         }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

@@ -4,29 +4,39 @@ struct CheckoutView: View {
     @StateObject private var viewModel = CheckoutViewModel()
     @EnvironmentObject var cartManager: CartManager
     @Environment(\.presentationMode) var presentationMode
+    @State private var showAddressBook = false
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 // Customer Information
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Thông tin giao hàng")
+                    Text(LocalizedStringKey("shipping_information"))
                         .font(.headline)
                         .padding(.top)
                     
-                    CustomTextField(placeholder: "Họ và tên *", text: $viewModel.fullName)
-                    CustomTextField(placeholder: "Số điện thoại *", text: $viewModel.phone, keyboardType: .phonePad)
-                    CustomTextField(placeholder: "Email (Tùy chọn)", text: $viewModel.email, keyboardType: .emailAddress)
+                    CustomTextField(placeholder: NSLocalizedString("full_name", comment: ""), text: $viewModel.fullName)
+                    CustomTextField(placeholder: NSLocalizedString("phone_number", comment: ""), text: $viewModel.phone, keyboardType: .phonePad)
+                    CustomTextField(placeholder: "Email", text: $viewModel.email, keyboardType: .emailAddress)
                 }
                 
                 // Address Section
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Địa chỉ")
-                        .font(.headline)
+                    HStack {
+                        Text(LocalizedStringKey("shipping_info"))
+                            .font(.headline)
+                        Spacer()
+                        Button(LocalizedStringKey("choose_address_book")) {
+                            showAddressBook = true
+                        }
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.appPrimary)
+                    }
                     
                     // Province Picker
                     if viewModel.isLoadingLocations && viewModel.provinces.isEmpty {
-                        ProgressView("Đang tải danh sách Tỉnh/TP...")
+                        ProgressView(LocalizedStringKey("loading_data"))
                     } else {
                         Menu {
                             ForEach(viewModel.provinces) { province in
@@ -35,7 +45,7 @@ struct CheckoutView: View {
                                 }
                             }
                         } label: {
-                            dropdownLabel(title: viewModel.selectedProvince?.name ?? "Chọn Tỉnh / Thành phố *")
+                            dropdownLabel(title: viewModel.selectedProvince?.name ?? NSLocalizedString("select_province", comment: ""))
                         }
                     }
                     
@@ -47,7 +57,7 @@ struct CheckoutView: View {
                             }
                         }
                     } label: {
-                        dropdownLabel(title: viewModel.selectedDistrict?.name ?? "Chọn Quận / Huyện *")
+                        dropdownLabel(title: viewModel.selectedDistrict?.name ?? NSLocalizedString("select_district", comment: ""))
                     }
                     .disabled(viewModel.districts.isEmpty)
                     
@@ -59,24 +69,24 @@ struct CheckoutView: View {
                             }
                         }
                     } label: {
-                        dropdownLabel(title: viewModel.selectedWard?.name ?? "Chọn Phường / Xã *")
+                        dropdownLabel(title: viewModel.selectedWard?.name ?? NSLocalizedString("select_ward", comment: ""))
                     }
                     .disabled(viewModel.wards.isEmpty)
                     
-                    CustomTextField(placeholder: "Số nhà, Tên đường *", text: $viewModel.addressDetail)
+                    CustomTextField(placeholder: NSLocalizedString("street_address", comment: ""), text: $viewModel.addressDetail)
                     
-                    CustomTextField(placeholder: "Ghi chú đơn hàng (Tùy chọn)", text: $viewModel.notes)
+                    CustomTextField(placeholder: NSLocalizedString("order_notes", comment: ""), text: $viewModel.notes)
                 }
                 
                 // Payment Method
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Phương thức thanh toán")
+                    Text(LocalizedStringKey("payment_method_title"))
                         .font(.headline)
                     
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(Color.appText)
-                        Text("Thanh toán khi nhận hàng (COD)")
+                        Text(LocalizedStringKey("cod_payment"))
                             .font(.subheadline)
                             .foregroundColor(.appText)
                         Spacer()
@@ -90,7 +100,6 @@ struct CheckoutView: View {
                     )
                 }
                 
-                // Submit Button
                 Button(action: {
                     Task {
                         await viewModel.submitOrder(cartItems: cartManager.cart?.items ?? [])
@@ -100,7 +109,7 @@ struct CheckoutView: View {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
                     } else {
-                        Text("ĐẶT HÀNG NGAY")
+                        Text(LocalizedStringKey("place_order"))
                     }
                 }
                 .font(.headline)
@@ -120,19 +129,34 @@ struct CheckoutView: View {
             }
             .padding()
         }
-        .navigationTitle("Thanh toán")
+        .navigationTitle(NSLocalizedString("checkout_title", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.white)
         .task {
             await viewModel.fetchProvinces()
         }
-        .alert("Checkout Successful!", isPresented: $viewModel.checkoutSuccess) {
+        .alert(LocalizedStringKey("checkout_success"), isPresented: $viewModel.checkoutSuccess) {
             Button("OK", role: .cancel) {
                 cartManager.clearCart()
                 presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    cartManager.navigateToCatalog = true
+                }
             }
         } message: {
-            Text("Your order has been placed successfully.")
+            Text(LocalizedStringKey("checkout_success_desc"))
+        }
+        .sheet(isPresented: $showAddressBook) {
+            NavigationView {
+                AddressBookView(isSelectionMode: true) { selectedAddress in
+                    viewModel.fullName = selectedAddress.name
+                    viewModel.phone = selectedAddress.phone
+                    viewModel.addressDetail = selectedAddress.street
+                    // For district/ward/province it would ideally map back to IDs, 
+                    // but for demo purposes, we will just set it if possible or ignore it since we don't have matching IDs in Address.
+                    // A proper implementation would save IDs in Address entity.
+                }
+            }
         }
     }
     
@@ -140,7 +164,7 @@ struct CheckoutView: View {
     private func dropdownLabel(title: String) -> some View {
         HStack {
             Text(title)
-                .foregroundColor(title.contains("Chọn") ? .gray : .black)
+                .foregroundColor(.black)
             Spacer()
             Image(systemName: "chevron.down")
                 .foregroundColor(.gray)

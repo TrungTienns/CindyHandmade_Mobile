@@ -3,6 +3,8 @@ import SwiftUI
 struct WishlistView: View {
     @StateObject private var viewModel = WishlistViewModel()
     @EnvironmentObject var wishlistManager: WishlistManager
+    @EnvironmentObject var cartManager: CartManager
+    @State private var showLogin = false
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -17,11 +19,23 @@ struct WishlistView: View {
                         ProgressView()
                             .frame(maxWidth: .infinity)
                             .padding(.top, 40)
-                    } else if let error = viewModel.errorMessage, viewModel.products.isEmpty {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity)
+                    } else if viewModel.errorMessage != nil && viewModel.products.isEmpty {
+                        VStack {
+                            LoginPromptView(
+                                iconName: "heart.slash",
+                                titleKey: "login_required_title",
+                                descriptionKey: "login_required_desc_wishlist",
+                                onLoginTapped: {
+                                    showLogin = true
+                                }
+                            )
                             .padding(.top, 40)
+                            
+                            NavigationLink(destination: LoginView(), isActive: $showLogin) {
+                                EmptyView()
+                            }
+                            .hidden()
+                        }
                     } else {
                         // Filter products dynamically so they disappear if un-hearted
                         let activeWishlist = viewModel.products.filter { wishlistManager.wishlistedProductIds.contains($0.id) }
@@ -34,6 +48,19 @@ struct WishlistView: View {
                                 Text("wishlist_empty")
                                     .font(.headline)
                                     .foregroundColor(.appTextSecondary)
+                                
+                                Button(action: {
+                                    cartManager.navigateToCatalog = true
+                                }) {
+                                    Text("Shop Now")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 32)
+                                        .padding(.vertical, 12)
+                                        .background(Color.appPrimary)
+                                        .clipShape(Capsule())
+                                }
+                                .padding(.top, 16)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.top, 80)
@@ -46,6 +73,12 @@ struct WishlistView: View {
                                         name: product.name,
                                         price: product.formattedPrice,
                                         imageUrl: product.imageUrl
+                                    )
+                                    .background(
+                                        NavigationLink(destination: ProductDetailView(product: product)) {
+                                            EmptyView()
+                                        }
+                                        .opacity(0)
                                     )
                                 }
                             }
@@ -69,6 +102,11 @@ struct WishlistView: View {
             }
             .refreshable {
                 viewModel.fetchWishlist()
+            }
+            .onChange(of: showLogin) { isShowing in
+                if !isShowing {
+                    viewModel.fetchWishlist()
+                }
             }
         }
     }

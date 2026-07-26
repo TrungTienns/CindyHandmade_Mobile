@@ -25,6 +25,7 @@ struct ProductDTO: Decodable {
             price: self.price,
             formattedPrice: formattedPrice,
             imageUrl: imageUrl,
+            images: self.images ?? [imageUrl],
             categoryName: self.category?.name ?? "Khác"
         )
     }

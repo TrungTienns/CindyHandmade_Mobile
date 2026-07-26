@@ -5,7 +5,7 @@ struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var selectedTab: TabItem = .home
     @State private var showLogin = false
-    @State private var navigateToAllProducts = false
+    @State private var categoryToExplore: String?
     @State private var showSideMenu = false
     
     @EnvironmentObject var cartManager: CartManager
@@ -19,7 +19,7 @@ struct HomeView: View {
                 case .home:
                     homeContent
                 case .catalog:
-                    AllProductsView()
+                    AllProductsView(initialCategoryName: categoryToExplore)
                 case .cart:
                     NavigationView {
                         CartView()
@@ -42,7 +42,7 @@ struct HomeView: View {
             CustomTabBar(selectedTab: $selectedTab, cartBadgeCount: cartManager.cart?.items.count ?? 0, onTabTapped: { tab in
                 if tab == .home && selectedTab == .home {
                     // Pop to root (Home)
-                    navigateToAllProducts = false
+                    categoryToExplore = nil
                 }
                 selectedTab = tab
             })
@@ -92,6 +92,12 @@ struct HomeView: View {
             Button(LocalizedStringKey("ok"), role: .cancel) { }
         } message: {
             Text(cartManager.errorMessage ?? NSLocalizedString("error_add_cart", comment: ""))
+        }
+        .onChange(of: cartManager.navigateToCatalog) { newValue in
+            if newValue {
+                selectedTab = .catalog
+                cartManager.navigateToCatalog = false
+            }
         }
     }
     
@@ -143,7 +149,8 @@ struct HomeView: View {
                         }
                         
                         HeroBannerView(onShopNowTapped: {
-                            navigateToAllProducts = true
+                            categoryToExplore = nil
+                            selectedTab = .catalog
                         })
                     }
                     
@@ -192,6 +199,12 @@ struct HomeView: View {
                                             price: product.formattedPrice,
                                             imageUrl: product.imageUrl
                                         )
+                                        .background(
+                                            NavigationLink(destination: ProductDetailView(product: product)) {
+                                                EmptyView()
+                                            }
+                                            .opacity(0)
+                                        )
                                     }
                                 }
                             }
@@ -211,28 +224,46 @@ struct HomeView: View {
                         
                         VStack(spacing: 12) {
                             // Top large card
-                            ExploreCollectionCard(
-                                title: "Amigurumi",
-                                subtitle: "Plushies & Toys",
-                                imageUrl: "https://images.unsplash.com/photo-1595341595379-cf1cb694ea1f?q=80&w=2320&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            )
-                            .frame(height: 140)
+                            Button(action: {
+                                categoryToExplore = "Thành phẩm" // Matches DB category
+                                selectedTab = .catalog
+                            }) {
+                                ExploreCollectionCard(
+                                    title: "Amigurumi",
+                                    subtitle: "Plushies & Toys",
+                                    imageUrl: "https://images.unsplash.com/photo-1595341595379-cf1cb694ea1f?q=80&w=2320&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                )
+                                .frame(height: 140)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                             
                             // Bottom two cards
                             HStack(spacing: 12) {
-                                ExploreCollectionCard(
-                                    title: "Clothing",
-                                    subtitle: nil,
-                                    imageUrl: "https://images.unsplash.com/photo-1574291814206-363acdf2aa79?q=80&w=400&auto=format&fit=crop"
-                                )
-                                .frame(height: 140)
+                                Button(action: {
+                                    categoryToExplore = "Hoa len " // Matches DB category exactly (with trailing space)
+                                    selectedTab = .catalog
+                                }) {
+                                    ExploreCollectionCard(
+                                        title: "Clothing",
+                                        subtitle: nil,
+                                        imageUrl: "https://images.unsplash.com/photo-1574291814206-363acdf2aa79?q=80&w=400&auto=format&fit=crop"
+                                    )
+                                    .frame(height: 140)
+                                }
+                                .buttonStyle(PlainButtonStyle())
                                 
-                                ExploreCollectionCard(
-                                    title: "Accessories",
-                                    subtitle: nil,
-                                    imageUrl: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?q=80&w=400&auto=format&fit=crop"
-                                )
-                                .frame(height: 140)
+                                Button(action: {
+                                    categoryToExplore = "Phụ kiện" // Matches DB category
+                                    selectedTab = .catalog
+                                }) {
+                                    ExploreCollectionCard(
+                                        title: "Accessories",
+                                        subtitle: nil,
+                                        imageUrl: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?q=80&w=400&auto=format&fit=crop"
+                                    )
+                                    .frame(height: 140)
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                     }

@@ -30,6 +30,7 @@ class ProductRepositoryImpl: ProductRepository {
                 price: dto.price,
                 formattedPrice: formattedPrice,
                 imageUrl: imageUrl,
+                images: dto.images ?? [imageUrl],
                 categoryName: dto.category?.name ?? "Khác"
             )
         }

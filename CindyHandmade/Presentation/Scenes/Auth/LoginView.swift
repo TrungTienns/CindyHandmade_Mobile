@@ -15,21 +15,36 @@ struct LoginView: View {
             Color.appBackground.ignoresSafeArea()
             
             // Wavy Header Background
-            WavyHeaderShape()
-                .fill(Color.appPrimary.opacity(0.8)) // Fallback color
-                .overlay(
-                    Image("login_pattern")
-                        .resizable()
-                        .scaledToFill()
-                        .clipShape(WavyHeaderShape())
-                        .opacity(0.4)
-                )
-                .frame(height: 350)
-                .ignoresSafeArea(edges: .top)
+            ZStack {
+                Image("login_pattern")
+                    .resizable()
+                    .scaledToFill()
+                
+                Color.appPrimary.opacity(0.8)
+            }
+            .clipShape(WavyHeaderShape())
+            .frame(height: 350)
+            .ignoresSafeArea(edges: .top)
             
             VStack {
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.white)
+                            .frame(width: 44, height: 44)
+                            .background(Color.black.opacity(0.2))
+                            .clipShape(Circle())
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                
                 Spacer()
-                    .frame(height: 200)
+                    .frame(height: 220)
                 
                 // Sign In State
                 VStack(alignment: .leading, spacing: 20) {
@@ -116,13 +131,16 @@ struct LoginView: View {
                     
                     HStack {
                         Spacer()
-                        Text("no_account")
+                        Text(LocalizedStringKey("no_account"))
                             .font(.caption)
                             .foregroundColor(.appTextSecondary)
-                        + Text("sign_up")
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(.appPrimary)
+                        
+                        NavigationLink(destination: SignUpView()) {
+                            Text(LocalizedStringKey("sign_up"))
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(.appPrimary)
+                        }
                         Spacer()
                     }
                     .padding(.top, 16)
@@ -132,6 +150,7 @@ struct LoginView: View {
                 Spacer()
             }
         }
+        .navigationBarHidden(true)
         .onChange(of: viewModel.loginSuccess) { success in
             if success {
                 dismiss()

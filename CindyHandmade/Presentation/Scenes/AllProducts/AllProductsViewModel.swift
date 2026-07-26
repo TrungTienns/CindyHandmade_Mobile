@@ -23,6 +23,8 @@ class AllProductsViewModel: ObservableObject {
     @Published var maxPrice: Double = 20000000
     @Published var sortOption: SortOption = .none
     
+    var initialCategoryName: String?
+    
     private let fetchProductsUseCase: FetchProductsUseCase
     private let getCategoriesUseCase: GetCategoriesUseCase
     
@@ -79,7 +81,12 @@ class AllProductsViewModel: ObservableObject {
                 result.append(contentsOf: fetchedCategories)
                 
                 self.categories = result
-                if self.selectedCategory == nil {
+                
+                if let initial = self.initialCategoryName,
+                   let matched = result.first(where: { $0.name.lowercased() == initial.lowercased() }) {
+                    self.selectedCategory = matched
+                    self.initialCategoryName = nil // clear after use
+                } else if self.selectedCategory == nil {
                     self.selectedCategory = allCategory
                 }
             } catch {

@@ -73,6 +73,19 @@ struct CartView: View {
                                 Text("cart_empty")
                                     .font(.headline)
                                     .foregroundColor(.appTextSecondary)
+                                
+                                Button(action: {
+                                    cartManager.navigateToCatalog = true
+                                }) {
+                                    Text("Shop Now")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 32)
+                                        .padding(.vertical, 12)
+                                        .background(Color.appPrimary)
+                                        .clipShape(Capsule())
+                                }
+                                .padding(.top, 16)
                             }
                             .padding(.top, 60)
                         } else {

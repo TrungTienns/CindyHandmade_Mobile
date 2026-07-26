@@ -100,3 +100,99 @@
 "error" = "Error";
 "ok" = "OK";
 "error_add_cart" = "Could not add to cart.";
+
+/* Order Management */
+"all_status" = "All";
+"completed" = "Completed";
+"cancelled" = "Cancelled";
+"loading_orders" = "Loading orders...";
+"retry" = "Retry";
+"no_orders" = "No orders found";
+"order_num" = "Order #%d";
+"product_type" = "Type: %@, %@";
+"see_more_items" = "See %d more products...";
+"items_count" = "%d items";
+"total_amount" = "Total:";
+"order_detail" = "Order Details";
+"shipping_info" = "Shipping Address";
+"no_phone" = "No phone number";
+"no_address" = "No address";
+"products" = "Products";
+"order_code" = "Order ID";
+"order_date" = "Order Date";
+"payment_method" = "Payment Method";
+"merchandise_subtotal" = "Merchandise Subtotal";
+"shipping_fee" = "Shipping Fee";
+"order_total" = "Order Total";
+"free_shipping" = "0 ₫";
+
+/* Order Status Desc */
+"status_pending_desc" = "Please pay to prepare the order.";
+"status_processing_desc" = "Seller is preparing your order.";
+"status_shipped_desc" = "Your order is out for delivery.";
+"status_delivered_desc" = "Order has been delivered successfully.";
+"status_cancelled_desc" = "This order has been cancelled.";
+"status_unknown" = "Unknown Status";
+"timeline_placed" = "Placed";
+"timeline_confirmed" = "Confirmed";
+"timeline_shipping" = "Shipping";
+"timeline_success" = "Success";
+"timeline_cancelled" = "Order Cancelled";
+
+/* Address Management */
+"no_saved_addresses" = "No saved addresses";
+"add_new_address" = "Add New Address";
+"address_book" = "Address Book";
+"select_address" = "Select Address";
+"default_badge" = "Default";
+"select_btn" = "Select";
+"set_as_default" = "Set as Default";
+"delete" = "Delete";
+
+/* Add Address */
+"contact_info" = "Contact Info";
+"phone_number" = "Phone Number *";
+"street_address" = "Street Address (House No, Street)";
+"ward" = "Ward";
+"district" = "District";
+"city" = "City / Province";
+"set_default_address" = "Set as Default Address";
+"save_address" = "Save Address";
+"new_address" = "New Address";
+
+/* Checkout */
+"shipping_information" = "Shipping Information";
+"choose_address_book" = "Choose from Address Book";
+"select_province" = "Select Province / City *";
+"select_district" = "Select District *";
+"select_ward" = "Select Ward *";
+"order_notes" = "Order notes (Optional)";
+"payment_method_title" = "Payment Method";
+"cod_payment" = "Cash on Delivery (COD)";
+"place_order" = "PLACE ORDER";
+"checkout_success" = "Checkout Successful!";
+"checkout_success_desc" = "Your order has been placed successfully.";
+"checkout_title" = "Checkout";
+
+/* Onboarding */
+"onboarding_title_1" = "Discover Handmade Knits";
+"onboarding_desc_1" = "Explore our cozy collection of handmade items crafted with love and care.";
+"onboarding_title_2" = "Easy Shopping";
+"onboarding_desc_2" = "Add items to your cart, checkout securely, and track your orders.";
+"onboarding_title_3" = "Join Our Community";
+"onboarding_desc_3" = "Share your style and connect with other handmade craft lovers.";
+"onboarding_skip" = "Skip";
+"onboarding_next" = "Next";
+"onboarding_get_started" = "Get Started";
+
+/* Login Prompt */
+"login_required_title" = "Log in to continue";
+"login_required_desc_profile" = "Please log in to view your personal profile and order history.";
+"login_required_desc_wishlist" = "Log in to save your favorite handmade items and access them anytime.";
+"login_now_btn" = "Log In / Sign Up";
+
+/* Registration */
+"enter_name" = "John Doe";
+"confirm_password" = "Confirm Password";
+"re_enter_password" = "Re-enter your password";
+"already_have_account" = "Already have an account? ";

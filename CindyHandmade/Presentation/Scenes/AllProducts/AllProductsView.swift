@@ -2,6 +2,8 @@ import SwiftUI
 import Combine
 
 struct AllProductsView: View {
+    var initialCategoryName: String? = nil
+    
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel = AllProductsViewModel()
     @State private var currentBannerIndex = 0
@@ -20,30 +22,14 @@ struct AllProductsView: View {
             VStack(spacing: 24) {
                 // Custom Navigation Bar
                 HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.appText)
-                            .frame(width: 44, height: 44)
-                            .background(Color.appCardBackground)
-                            .clipShape(Circle())
-                            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                    }
-                    
                     Spacer()
                     
-                    Text("all_products")
+                    Text(LocalizedStringKey("all_products"))
                         .font(.custom("Georgia", size: 24))
                         .fontWeight(.bold)
                         .foregroundColor(.appText)
                     
                     Spacer()
-                    
-                    // Invisible view for symmetry
-                    Color.clear
-                        .frame(width: 44, height: 44)
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
@@ -166,6 +152,12 @@ struct AllProductsView: View {
                                 price: product.formattedPrice,
                                 imageUrl: product.imageUrl
                             )
+                            .background(
+                                NavigationLink(destination: ProductDetailView(product: product)) {
+                                    EmptyView()
+                                }
+                                .opacity(0)
+                            )
                         }
                     }
                     .padding(.horizontal, 16)
@@ -176,6 +168,9 @@ struct AllProductsView: View {
         .background(Color.appBackground.ignoresSafeArea())
         .navigationBarHidden(true)
         .onAppear {
+            if let initial = initialCategoryName {
+                viewModel.initialCategoryName = initial
+            }
             viewModel.fetchData()
         }
         .sheet(isPresented: $showFilterModal) {

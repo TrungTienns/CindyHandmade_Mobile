@@ -100,3 +100,99 @@
 "error" = "Erreur";
 "ok" = "OK";
 "error_add_cart" = "Impossible d'ajouter au panier.";
+
+/* Order Management */
+"all_status" = "Tout";
+"completed" = "Terminé";
+"cancelled" = "Annulé";
+"loading_orders" = "Chargement des commandes...";
+"retry" = "Réessayer";
+"no_orders" = "Aucune commande trouvée";
+"order_num" = "Commande n°%d";
+"product_type" = "Type: %@, %@";
+"see_more_items" = "Voir %d autres produits...";
+"items_count" = "%d articles";
+"total_amount" = "Total :";
+"order_detail" = "Détails de la commande";
+"shipping_info" = "Adresse de livraison";
+"no_phone" = "Aucun numéro";
+"no_address" = "Aucune adresse";
+"products" = "Produits";
+"order_code" = "N° de commande";
+"order_date" = "Date de commande";
+"payment_method" = "Méthode de paiement";
+"merchandise_subtotal" = "Sous-total";
+"shipping_fee" = "Frais de port";
+"order_total" = "Total de la commande";
+"free_shipping" = "Gratuit";
+
+/* Order Status Desc */
+"status_pending_desc" = "Veuillez payer pour préparer la commande.";
+"status_processing_desc" = "Le vendeur prépare votre commande.";
+"status_shipped_desc" = "Votre commande est en cours de livraison.";
+"status_delivered_desc" = "Commande livrée avec succès.";
+"status_cancelled_desc" = "Cette commande a été annulée.";
+"status_unknown" = "Statut inconnu";
+"timeline_placed" = "Placée";
+"timeline_confirmed" = "Confirmée";
+"timeline_shipping" = "Envoi";
+"timeline_success" = "Succès";
+"timeline_cancelled" = "Commande annulée";
+
+/* Address Management */
+"no_saved_addresses" = "Aucune adresse enregistrée";
+"add_new_address" = "Ajouter une nouvelle adresse";
+"address_book" = "Carnet d'adresses";
+"select_address" = "Sélectionner une adresse";
+"default_badge" = "Par défaut";
+"select_btn" = "Sélectionner";
+"set_as_default" = "Définir par défaut";
+"delete" = "Supprimer";
+
+/* Add Address */
+"contact_info" = "Informations de contact";
+"phone_number" = "Numéro de téléphone *";
+"street_address" = "Adresse (N° de rue, rue)";
+"ward" = "Quartier";
+"district" = "Arrondissement";
+"city" = "Ville / Province";
+"set_default_address" = "Définir comme adresse par défaut";
+"save_address" = "Enregistrer l'adresse";
+"new_address" = "Nouvelle adresse";
+
+/* Checkout */
+"shipping_information" = "Informations d'expédition";
+"choose_address_book" = "Choisir depuis le carnet d'adresses";
+"select_province" = "Sélectionner la province / ville *";
+"select_district" = "Sélectionner l'arrondissement *";
+"select_ward" = "Sélectionner le quartier *";
+"order_notes" = "Notes de commande (Optionnel)";
+"payment_method_title" = "Méthode de paiement";
+"cod_payment" = "Paiement à la livraison (COD)";
+"place_order" = "PASSER LA COMMANDE";
+"checkout_success" = "Commande réussie !";
+"checkout_success_desc" = "Votre commande a été passée avec succès.";
+"checkout_title" = "Paiement";
+
+/* Onboarding */
+"onboarding_title_1" = "Découvrez nos tricots";
+"onboarding_desc_1" = "Explorez notre collection de créations faites main avec amour et soin.";
+"onboarding_title_2" = "Achat facile";
+"onboarding_desc_2" = "Ajoutez des articles au panier, payez en toute sécurité et suivez vos commandes.";
+"onboarding_title_3" = "Rejoignez la communauté";
+"onboarding_desc_3" = "Partagez votre style et connectez-vous avec d'autres passionnés de fait main.";
+"onboarding_skip" = "Passer";
+"onboarding_next" = "Suivant";
+"onboarding_get_started" = "Commencer";
+
+/* Login Prompt */
+"login_required_title" = "Connectez-vous pour continuer";
+"login_required_desc_profile" = "Veuillez vous connecter pour voir votre profil personnel et l'historique de vos commandes.";
+"login_required_desc_wishlist" = "Connectez-vous pour enregistrer vos articles faits main préférés et y accéder à tout moment.";
+"login_now_btn" = "Se connecter / S'inscrire";
+
+/* Registration */
+"enter_name" = "Jean Dupont";
+"confirm_password" = "Confirmer le mot de passe";
+"re_enter_password" = "Entrez à nouveau le mot de passe";
+"already_have_account" = "Vous avez déjà un compte ? ";

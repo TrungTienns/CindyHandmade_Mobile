@@ -11,6 +11,7 @@ class CartManager: ObservableObject {
     @Published var showSuccessMessage = false
     @Published var errorMessage: String?
     @Published var showErrorAlert = false
+    @Published var navigateToCatalog = false
     
     private let apiClient: APIClient
     
