@@ -43,111 +43,113 @@ struct LoginView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
                 
-                Spacer()
-                    .frame(height: 220)
-                
-                // Sign In State
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("sign_in")
-                        .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.appText)
-                        .padding(.bottom, 10)
+                ScrollView(showsIndicators: false) {
+                    Spacer()
+                        .frame(height: 220)
                     
-                    VStack(spacing: 24) {
-                        // Email Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("email")
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundColor(.appTextSecondary)
+                    // Sign In State
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("sign_in")
+                            .font(.system(size: 40, weight: .bold))
+                            .foregroundColor(.appText)
+                            .padding(.bottom, 10)
+                        
+                        VStack(spacing: 24) {
+                            // Email Field
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("email")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.appTextSecondary)
+                                
+                                HStack {
+                                    Image(systemName: "envelope")
+                                        .foregroundColor(focusedField == .email ? .appPrimary : .gray)
+                                    TextField("demo@email.com", text: $viewModel.email)
+                                        .keyboardType(.emailAddress)
+                                        .autocapitalization(.none)
+                                        .focused($focusedField, equals: .email)
+                                }
+                                Divider()
+                                    .background(focusedField == .email ? Color.appPrimary : Color.gray.opacity(0.3))
+                            }
+                            
+                            // Password Field
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("password")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.appTextSecondary)
+                                
+                                HStack {
+                                    Image(systemName: "lock")
+                                        .foregroundColor(focusedField == .password ? .appPrimary : .gray)
+                                    SecureField(NSLocalizedString("enter_password", comment: ""), text: $viewModel.password)
+                                        .focused($focusedField, equals: .password)
+                                    Image(systemName: "eye.slash") // Placeholder for eye icon
+                                        .foregroundColor(.gray)
+                                }
+                                Divider()
+                                    .background(focusedField == .password ? Color.appPrimary : Color.gray.opacity(0.3))
+                            }
                             
                             HStack {
-                                Image(systemName: "envelope")
-                                    .foregroundColor(focusedField == .email ? .appPrimary : .gray)
-                                TextField("demo@email.com", text: $viewModel.email)
-                                    .keyboardType(.emailAddress)
-                                    .autocapitalization(.none)
-                                    .focused($focusedField, equals: .email)
+                                Spacer()
+                                Text("forgot_password")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.appPrimary)
                             }
-                            Divider()
-                                .background(focusedField == .email ? Color.appPrimary : Color.gray.opacity(0.3))
                         }
                         
-                        // Password Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("password")
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundColor(.appTextSecondary)
-                            
-                            HStack {
-                                Image(systemName: "lock")
-                                    .foregroundColor(focusedField == .password ? .appPrimary : .gray)
-                                SecureField(NSLocalizedString("enter_password", comment: ""), text: $viewModel.password)
-                                    .focused($focusedField, equals: .password)
-                                Image(systemName: "eye.slash") // Placeholder for eye icon
-                                    .foregroundColor(.gray)
-                            }
-                            Divider()
-                                .background(focusedField == .password ? Color.appPrimary : Color.gray.opacity(0.3))
+                        if let errorMessage = viewModel.errorMessage {
+                            Text(errorMessage)
+                                .foregroundColor(.red)
+                                .font(.footnote)
                         }
+                        
+                        Spacer().frame(height: 20)
+                        
+                        Button(action: {
+                            HapticManager.shared.impact(style: .light)
+                            viewModel.login()
+                        }) {
+                            if viewModel.isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    .frame(maxWidth: .infinity)
+                            } else {
+                                Text("login")
+                                    .fontWeight(.bold)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                        .padding()
+                        .background(Color.appPrimary)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                        .shadow(color: Color.appPrimary.opacity(0.4), radius: 10, x: 0, y: 5)
+                        .disabled(viewModel.isLoading)
                         
                         HStack {
                             Spacer()
-                            Text("forgot_password")
+                            Text(LocalizedStringKey("no_account"))
                                 .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.appPrimary)
+                                .foregroundColor(.appTextSecondary)
+                            
+                            NavigationLink(destination: SignUpView()) {
+                                Text(LocalizedStringKey("sign_up"))
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.appPrimary)
+                            }
+                            Spacer()
                         }
+                        .padding(.top, 16)
                     }
-                    
-                    if let errorMessage = viewModel.errorMessage {
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                            .font(.footnote)
-                    }
-                    
-                    Spacer().frame(height: 20)
-                    
-                    Button(action: {
-                        viewModel.login()
-                    }) {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Text("login")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                        }
-                    }
-                    .padding()
-                    .background(Color.appPrimary)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .shadow(color: Color.appPrimary.opacity(0.4), radius: 10, x: 0, y: 5)
-                    .disabled(viewModel.isLoading)
-                    
-                    HStack {
-                        Spacer()
-                        Text(LocalizedStringKey("no_account"))
-                            .font(.caption)
-                            .foregroundColor(.appTextSecondary)
-                        
-                        NavigationLink(destination: SignUpView()) {
-                            Text(LocalizedStringKey("sign_up"))
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundColor(.appPrimary)
-                        }
-                        Spacer()
-                    }
-                    .padding(.top, 16)
+                    .padding(.horizontal, 32)
+                    .padding(.bottom, 40)
                 }
-                .padding(.horizontal, 32)
-                
-                Spacer()
             }
         }
         .navigationBarHidden(true)

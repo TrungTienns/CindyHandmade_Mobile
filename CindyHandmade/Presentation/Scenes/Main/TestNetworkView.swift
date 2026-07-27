@@ -3,7 +3,7 @@ import SwiftUI
 // Một struct tạm để test API
 struct TestEndpoint: APIEndpoint {
     // Port 8080 là port mặc định theo file .env của KnitWorkShop_BE
-    var baseURL: String = "http://localhost:8080/api" 
+    var baseURL: String = "http://192.168.1.5:8080/api" 
     var path: String = "/products" // Lấy thử danh sách sản phẩm
     var method: HTTPMethod = .get
     var headers: [String : String]? = nil

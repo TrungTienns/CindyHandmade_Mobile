@@ -72,13 +72,13 @@ struct WishlistView: View {
                                         category: product.categoryName,
                                         name: product.name,
                                         price: product.formattedPrice,
-                                        imageUrl: product.imageUrl
+                                        imageUrl: product.imageUrl,
+                                        avgRating: product.avgRating
                                     )
                                     .background(
                                         NavigationLink(destination: ProductDetailView(product: product)) {
-                                            EmptyView()
+                                            Color.black.opacity(0.001)
                                         }
-                                        .opacity(0)
                                     )
                                 }
                             }

@@ -51,12 +51,20 @@ class AppDIContainer {
         return LocationRepositoryImpl(apiClient: apiClient)
     }
     
+    func makeReviewRepository() -> ReviewRepository {
+        return ReviewRepositoryImpl(apiClient: apiClient)
+    }
+    
     func makeOrderRepository() -> OrderRepository {
         return OrderRepositoryImpl(apiClient: apiClient)
     }
     
     func makeFetchLocationsUseCase() -> FetchLocationsUseCase {
         return FetchLocationsUseCase(repository: makeLocationRepository())
+    }
+    
+    func makeReviewUseCase() -> ReviewUseCase {
+        return ReviewUseCaseImpl(repository: makeReviewRepository())
     }
     
     func makeCheckoutUseCase() -> CheckoutUseCase {

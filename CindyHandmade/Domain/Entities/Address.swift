@@ -8,6 +8,7 @@ struct Address: Identifiable, Codable, Equatable {
     var ward: String
     var district: String
     var city: String
+    var email: String?
     var isDefault: Bool
     
     var fullAddress: String {

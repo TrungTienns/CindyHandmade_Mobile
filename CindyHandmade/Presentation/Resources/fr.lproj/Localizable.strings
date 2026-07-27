@@ -125,6 +125,7 @@
 "shipping_fee" = "Frais de port";
 "order_total" = "Total de la commande";
 "free_shipping" = "Gratuit";
+"order_my_order" = "Mon ordre";
 
 /* Order Status Desc */
 "status_pending_desc" = "Veuillez payer pour préparer la commande.";

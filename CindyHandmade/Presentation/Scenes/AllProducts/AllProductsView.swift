@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 
 struct AllProductsView: View {
     var initialCategoryName: String? = nil
@@ -8,14 +7,14 @@ struct AllProductsView: View {
     @StateObject private var viewModel = AllProductsViewModel()
     @State private var currentBannerIndex = 0
     @State private var showFilterModal = false
-    
-    private let bannerImages = ["BannerProducts1", "BannerProducts2", "BannerProducts3"]
-    private let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+    @State private var bannerTimer: Timer?
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16)
     ]
+    
+    private let bannerImages = ["BannerProducts1", "BannerProducts2", "BannerProducts3"]
     
     var body: some View {
         ScrollView {
@@ -61,11 +60,9 @@ struct AllProductsView: View {
                 .aspectRatio(1.6, contentMode: .fit) // Automatically calculates height to avoid gaps
                 .cornerRadius(20)
                 .padding(.horizontal, 16)
-                .onReceive(timer) { _ in
-                    withAnimation {
-                        currentBannerIndex = (currentBannerIndex + 1) % bannerImages.count
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                        bannerTimer?.invalidate()
                     }
-                }
                 
                 // Search Bar
                 HStack {
@@ -109,8 +106,9 @@ struct AllProductsView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         if viewModel.isLoadingCategories {
-                            ProgressView()
-                                .padding()
+                            ForEach(0..<5, id: \.self) { _ in
+                                CategorySkeleton()
+                            }
                         } else {
                             ForEach(viewModel.categories) { category in
                                 let isSelected = viewModel.selectedCategory?.id == category.id
@@ -137,8 +135,12 @@ struct AllProductsView: View {
                 
                 // Products Grid
                 if viewModel.isLoadingProducts {
-                    ProgressView()
-                        .padding(.top, 40)
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(0..<6, id: \.self) { _ in
+                            ProductCardSkeleton()
+                        }
+                    }
+                    .padding(.horizontal, 16)
                 } else if let error = viewModel.errorMessage {
                     Text(error)
                         .foregroundColor(.red)
@@ -150,13 +152,13 @@ struct AllProductsView: View {
                                 category: product.categoryName,
                                 name: product.name,
                                 price: product.formattedPrice,
-                                imageUrl: product.imageUrl
+                                imageUrl: product.imageUrl,
+                                avgRating: product.avgRating
                             )
                             .background(
                                 NavigationLink(destination: ProductDetailView(product: product)) {
-                                    EmptyView()
+                                    Color.black.opacity(0.001)
                                 }
-                                .opacity(0)
                             )
                         }
                     }
@@ -172,6 +174,17 @@ struct AllProductsView: View {
                 viewModel.initialCategoryName = initial
             }
             viewModel.fetchData()
+            // Start banner timer when view appears
+            bannerTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { _ in
+                withAnimation {
+                    currentBannerIndex = (currentBannerIndex + 1) % bannerImages.count
+                }
+            }
+        }
+        .onDisappear {
+            // Stop and release timer when view disappears
+            bannerTimer?.invalidate()
+            bannerTimer = nil
         }
         .sheet(isPresented: $showFilterModal) {
             FilterModalView(viewModel: viewModel)

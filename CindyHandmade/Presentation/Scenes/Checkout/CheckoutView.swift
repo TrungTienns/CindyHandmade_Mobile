@@ -7,8 +7,41 @@ struct CheckoutView: View {
     @State private var showAddressBook = false
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+        ZStack {
+            Color.appBackground.ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Custom Navigation Header
+                HStack {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title3)
+                            .foregroundColor(.appText)
+                            .padding(12)
+                            .background(Color.appCardBackground)
+                            .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.05), radius: 3)
+                    }
+                    
+                    Spacer()
+                    
+                    Text(LocalizedStringKey("checkout_title"))
+                        .font(.custom("Georgia", size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(.appText)
+                    
+                    Spacer()
+                    
+                    Color.clear.frame(width: 44, height: 44) // For symmetry
+                }
+                .padding(.horizontal)
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
                 // Customer Information
                 VStack(alignment: .leading, spacing: 16) {
                     Text(LocalizedStringKey("shipping_information"))
@@ -127,11 +160,12 @@ struct CheckoutView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            .padding()
+                }
+                .padding()
+            }
         }
-        .navigationTitle(NSLocalizedString("checkout_title", comment: ""))
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color.white)
+        .navigationBarHidden(true)
+        .background(Color.appBackground)
         .task {
             await viewModel.fetchProvinces()
         }
@@ -149,12 +183,7 @@ struct CheckoutView: View {
         .sheet(isPresented: $showAddressBook) {
             NavigationView {
                 AddressBookView(isSelectionMode: true) { selectedAddress in
-                    viewModel.fullName = selectedAddress.name
-                    viewModel.phone = selectedAddress.phone
-                    viewModel.addressDetail = selectedAddress.street
-                    // For district/ward/province it would ideally map back to IDs, 
-                    // but for demo purposes, we will just set it if possible or ignore it since we don't have matching IDs in Address.
-                    // A proper implementation would save IDs in Address entity.
+                    viewModel.fillAddress(selectedAddress)
                 }
             }
         }
@@ -164,13 +193,13 @@ struct CheckoutView: View {
     private func dropdownLabel(title: String) -> some View {
         HStack {
             Text(title)
-                .foregroundColor(.black)
+                .foregroundColor(.appText)
             Spacer()
             Image(systemName: "chevron.down")
                 .foregroundColor(.gray)
         }
         .padding()
-        .background(Color(UIColor.systemGray6))
+        .background(Color.appText.opacity(0.05))
         .cornerRadius(8)
     }
 }
@@ -185,7 +214,8 @@ struct CustomTextField: View {
         TextField(placeholder, text: $text)
             .keyboardType(keyboardType)
             .padding()
-            .background(Color(UIColor.systemGray6))
+            .background(Color.appText.opacity(0.05))
             .cornerRadius(8)
+            .foregroundColor(.appText)
     }
 }

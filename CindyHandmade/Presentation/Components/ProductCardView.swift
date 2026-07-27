@@ -6,6 +6,7 @@ struct ProductCardView: View {
     let name: String
     let price: String
     let imageUrl: String
+    var avgRating: Double? = nil
     
     @EnvironmentObject var wishlistManager: WishlistManager
     
@@ -15,6 +16,7 @@ struct ProductCardView: View {
             ZStack(alignment: .topTrailing) {
                 AsyncImage(url: URL(string: imageUrl)) { image in
                     image
+                        .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 } placeholder: {
@@ -26,6 +28,7 @@ struct ProductCardView: View {
                 
                 // Wishlist Button
                 Button(action: {
+                    HapticManager.shared.impact(style: .medium)
                     wishlistManager.toggleWishlist(for: productId)
                 }) {
                     Image(systemName: wishlistManager.wishlistedProductIds.contains(productId) ? "heart.fill" : "heart")
@@ -68,9 +71,25 @@ struct ProductCardView: View {
                     .foregroundColor(.appText)
                     .lineLimit(1)
                 
-                Text(price)
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundColor(.appText)
+                
+                HStack(spacing: 4) {
+                    Text(price)
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundColor(.appText)
+                    
+                    Spacer()
+                    
+                    if let rating = avgRating {
+                        HStack(spacing: 2) {
+                            Image(systemName: "star.fill")
+                                .font(.system(size: 10))
+                                .foregroundColor(.yellow)
+                            Text(String(format: "%.1f", rating))
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.appText)
+                        }
+                    }
+                }
             }
         }
         .frame(width: 140)

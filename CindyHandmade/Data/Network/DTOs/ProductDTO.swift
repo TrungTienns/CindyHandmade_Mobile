@@ -8,6 +8,8 @@ struct ProductDTO: Decodable {
     let stock: Int?
     let images: [String]?
     let category: CategoryDTO?
+    let avgRating: Double?
+    let reviewCount: Int?
     
     func toDomain() -> Product {
         let imageUrl = self.images?.first ?? "https://images.unsplash.com/photo-1596766440742-996fffd0e261?q=80&w=400&auto=format&fit=crop"
@@ -26,7 +28,10 @@ struct ProductDTO: Decodable {
             formattedPrice: formattedPrice,
             imageUrl: imageUrl,
             images: self.images ?? [imageUrl],
-            categoryName: self.category?.name ?? "Khác"
+            categoryName: self.category?.name ?? "Khác",
+            avgRating: self.avgRating,
+            reviewCount: self.reviewCount,
+            reviews: [] // Reviews are fetched separately
         )
     }
 }

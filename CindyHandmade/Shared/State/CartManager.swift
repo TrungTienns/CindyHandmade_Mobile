@@ -15,17 +15,28 @@ class CartManager: ObservableObject {
     
     private let apiClient: APIClient
     
+    // Store tasks so they can be cancelled if needed
+    private var fetchCartTask: Task<Void, Never>?
+    private var addToCartTask: Task<Void, Never>?
+    
     private init(apiClient: APIClient = AppDIContainer.shared.apiClient) {
         self.apiClient = apiClient
     }
     
     func fetchCart() {
-        Task {
+        // Cancel any in-flight fetch before starting a new one
+        fetchCartTask?.cancel()
+        fetchCartTask = Task {
+            guard !Task.isCancelled else { return }
             do {
                 let fetchedCart = try await apiClient.request(endpoint: CartEndpoint.getCart, responseType: CartDTO.self)
-                self.cart = fetchedCart
+                if !Task.isCancelled {
+                    self.cart = fetchedCart
+                }
             } catch {
-                print("Failed to fetch cart: \(error)")
+                if !Task.isCancelled {
+                    print("Failed to fetch cart: \(error)")
+                }
             }
         }
     }
@@ -33,12 +44,13 @@ class CartManager: ObservableObject {
     func addToCart(productId: Int, quantity: Int = 1, size: String? = nil, color: String? = nil) {
         guard !isAddingToCart else { return } // Prevent spam clicks
         self.isAddingToCart = true
-        Task {
+        addToCartTask = Task {
             do {
                 let updatedCart = try await apiClient.request(
                     endpoint: CartEndpoint.addToCart(productId: productId, quantity: quantity, size: size, color: color),
                     responseType: CartDTO.self
                 )
+                guard !Task.isCancelled else { return }
                 self.cart = updatedCart
                 
                 // Show a quick visual feedback
@@ -50,6 +62,7 @@ class CartManager: ObservableObject {
                     self.showSuccessMessage = false
                 }
             } catch {
+                guard !Task.isCancelled else { return }
                 print("Failed to add to cart: \(error)")
                 self.errorMessage = "Failed to add to cart: \(error.localizedDescription)"
                 self.showErrorAlert = true
@@ -57,6 +70,7 @@ class CartManager: ObservableObject {
             self.isAddingToCart = false
         }
     }
+
     func updateQuantity(productId: Int, quantity: Int, size: String? = nil, color: String? = nil) {
         Task {
             do {
@@ -86,7 +100,8 @@ class CartManager: ObservableObject {
     }
     
     func clearCart() {
-        // Backend clears the cart upon checkout, so we just refetch
+        // Cancel any pending fetch and immediately refresh after checkout
+        fetchCartTask?.cancel()
         fetchCart()
     }
 }

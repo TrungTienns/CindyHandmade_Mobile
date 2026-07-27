@@ -18,6 +18,8 @@ class CheckoutViewModel: ObservableObject {
     
     @Published var selectedProvince: LocationEntity? {
         didSet {
+            // Skip automatic fetch when fillAddress is in control
+            guard !isFillingAddress else { return }
             if let province = selectedProvince {
                 Task {
                     await fetchDistricts(for: province.code)
@@ -33,6 +35,8 @@ class CheckoutViewModel: ObservableObject {
     
     @Published var selectedDistrict: LocationEntity? {
         didSet {
+            // Skip automatic fetch when fillAddress is in control
+            guard !isFillingAddress else { return }
             if let district = selectedDistrict {
                 Task {
                     await fetchWards(for: district.code)
@@ -51,6 +55,7 @@ class CheckoutViewModel: ObservableObject {
     @Published var isSubmitting: Bool = false
     @Published var errorMessage: String? = nil
     @Published var checkoutSuccess: Bool = false
+    private var isFillingAddress: Bool = false // Guard against didSet race during fillAddress
     
     private let fetchLocationsUseCase: FetchLocationsUseCase
     private let checkoutUseCase: CheckoutUseCase
@@ -95,6 +100,55 @@ class CheckoutViewModel: ObservableObject {
             errorMessage = "Lỗi khi tải danh sách Phường/Xã."
         }
         isLoadingLocations = false
+    }
+    
+    func fillAddress(_ address: Address) {
+        self.fullName = address.name
+        self.phone = address.phone
+        self.email = address.email ?? ""
+        self.addressDetail = address.street
+        
+        Task {
+            isFillingAddress = true // Lock: prevent didSet from interfering
+            isLoadingLocations = true
+            
+            // 1. Ensure provinces are loaded
+            if provinces.isEmpty {
+                do {
+                    provinces = try await fetchLocationsUseCase.getProvinces()
+                } catch {
+                    isLoadingLocations = false
+                    return
+                }
+            }
+            
+            // 2. Find and select Province
+            if let matchedProvince = provinces.first(where: { $0.name == address.city }) {
+                // Manually trigger district fetch instead of relying on didSet to avoid race conditions
+                selectedProvince = matchedProvince
+                
+                do {
+                    districts = try await fetchLocationsUseCase.getDistricts(provinceCode: matchedProvince.code)
+                    
+                    // 3. Find and select District
+                    if let matchedDistrict = districts.first(where: { $0.name == address.district }) {
+                        selectedDistrict = matchedDistrict
+                        
+                        do {
+                            wards = try await fetchLocationsUseCase.getWards(districtCode: matchedDistrict.code)
+                            
+                            // 4. Find and select Ward
+                            if let matchedWard = wards.first(where: { $0.name == address.ward }) {
+                                selectedWard = matchedWard
+                            }
+                        } catch {}
+                    }
+                } catch {}
+            }
+            
+            isLoadingLocations = false
+            isFillingAddress = false // Unlock: let didSet work normally again
+        }
     }
     
     func submitOrder(cartItems: [CartItemDTO]) async {

@@ -3,12 +3,41 @@ import SwiftUI
 struct OrderHistoryView: View {
     @StateObject private var viewModel = OrderHistoryViewModel()
     @State var selectedTab: OrderTabStatus = .all
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             
             VStack(spacing: 0) {
+                // Custom Navigation Header
+                HStack {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title3)
+                            .foregroundColor(.appText)
+                            .padding(12)
+                            .background(Color.appCardBackground)
+                            .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.05), radius: 3)
+                    }
+                    
+                    Spacer()
+                    
+                    Text(LocalizedStringKey("order_my_orders"))
+                        .font(.custom("Georgia", size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(.appText)
+                    
+                    Spacer()
+                    
+                    Color.clear.frame(width: 44, height: 44) // For symmetry
+                }
+                .padding(.horizontal)
+                .padding(.top, 16)
+                
                 // Scrollable Tabs
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 24) {
@@ -33,7 +62,7 @@ struct OrderHistoryView: View {
                     .padding(.horizontal)
                     .padding(.top, 12)
                 }
-                .background(Color.white)
+                .background(Color.appCardBackground)
                 .shadow(color: Color.black.opacity(0.05), radius: 2, y: 2)
                 
                 // Content
@@ -93,8 +122,7 @@ struct OrderHistoryView: View {
                 }
             }
         }
-        .navigationTitle(NSLocalizedString("order_my_orders", comment: ""))
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
         .task {
             await viewModel.fetchOrders()
         }
@@ -181,7 +209,7 @@ struct OrderCardView: View {
             }
         }
         .padding()
-        .background(Color.white)
+        .background(Color.appCardBackground)
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.05), radius: 5, y: 2)
     }

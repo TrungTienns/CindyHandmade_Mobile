@@ -20,12 +20,17 @@ struct CartView: View {
         subtotal
     }
     
-    private func formattedPrice(_ price: Double) -> String {
+    // Static formatter — instantiated once, shared across all calls
+    private static let priceFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
-        let priceString = formatter.string(from: NSNumber(value: price)) ?? "\(price)"
-        return "\(priceString) ₫" // Keeping the project's currency format
+        return formatter
+    }()
+    
+    private func formattedPrice(_ price: Double) -> String {
+        let priceString = Self.priceFormatter.string(from: NSNumber(value: price)) ?? "\(price)"
+        return "\(priceString) ₫"
     }
     
     var body: some View {
@@ -35,16 +40,8 @@ struct CartView: View {
             VStack(spacing: 0) {
                 // Header
                 HStack {
-                    Button(action: {
-                        // Usually handled by tab bar or navigation back
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.title3)
-                            .foregroundColor(.appText)
-                            .padding(12)
-                            .background(Color.white)
-                            .clipShape(Circle())
-                    }
+                    // Removed back button per user request
+                    Spacer().frame(width: 44) // Keep space for alignment if needed, or just remove
                     
                     Spacer()
                     
@@ -177,11 +174,6 @@ struct CartView: View {
                         .font(.caption)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 4)
-                        .background(Color.white)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.appTextSecondary.opacity(0.3), lineWidth: 1)
-                        )
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 
@@ -221,7 +213,7 @@ struct CartView: View {
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(Color.white)
+                    .background(Color.appCardBackground)
                     .clipShape(Capsule())
                 }
             }

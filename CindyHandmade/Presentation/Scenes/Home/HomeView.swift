@@ -18,14 +18,18 @@ struct HomeView: View {
                 switch selectedTab {
                 case .home:
                     homeContent
+                        .transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.98, anchor: .center)), removal: .opacity))
                 case .catalog:
                     AllProductsView(initialCategoryName: categoryToExplore)
+                        .transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.98, anchor: .center)), removal: .opacity))
                 case .cart:
                     NavigationView {
                         CartView()
                     }
+                    .transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.98, anchor: .center)), removal: .opacity))
                 case .wishlist:
                     WishlistView()
+                        .transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.98, anchor: .center)), removal: .opacity))
                 case .profile:
                     NavigationView {
                         ProfileView(onMenuTapped: {
@@ -34,8 +38,10 @@ struct HomeView: View {
                             }
                         })
                     }
+                    .transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.98, anchor: .center)), removal: .opacity))
                 }
             }
+            .id(selectedTab) // Forces SwiftUI to treat each case as a distinct view for transitions
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             // Custom Tab Bar
@@ -44,7 +50,9 @@ struct HomeView: View {
                     // Pop to root (Home)
                     categoryToExplore = nil
                 }
-                selectedTab = tab
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    selectedTab = tab
+                }
             })
             }
             .ignoresSafeArea(.all, edges: .bottom)
@@ -180,9 +188,13 @@ struct HomeView: View {
                         }
                         
                         if viewModel.isLoading && viewModel.topSellers.isEmpty {
-                            ProgressView()
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding()
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    ForEach(0..<3, id: \.self) { _ in
+                                        ProductCardSkeleton()
+                                    }
+                                }
+                            }
                         } else if let error = viewModel.errorMessage, viewModel.topSellers.isEmpty {
                             Text(error)
                                 .foregroundColor(.red)
@@ -197,13 +209,13 @@ struct HomeView: View {
                                             category: product.categoryName,
                                             name: product.name,
                                             price: product.formattedPrice,
-                                            imageUrl: product.imageUrl
+                                            imageUrl: product.imageUrl,
+                                            avgRating: product.avgRating
                                         )
                                         .background(
                                             NavigationLink(destination: ProductDetailView(product: product)) {
-                                                EmptyView()
+                                                Color.black.opacity(0.001)
                                             }
-                                            .opacity(0)
                                         )
                                     }
                                 }
@@ -273,7 +285,7 @@ struct HomeView: View {
             }
             .background(Color.appBackground)
             .refreshable {
-                viewModel.fetchTopSellers()
+                viewModel.fetchTopSellers(forceRefresh: true)
             }
             .navigationBarHidden(true)
         }

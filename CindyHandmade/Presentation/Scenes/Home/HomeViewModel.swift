@@ -23,7 +23,9 @@ class HomeViewModel: ObservableObject {
         self.tokenManager = tokenManager
     }
     
-    func fetchTopSellers() {
+    func fetchTopSellers(forceRefresh: Bool = false) {
+        // Skip if already loaded, unless forced (e.g. pull-to-refresh)
+        guard forceRefresh || topSellers.isEmpty else { return }
         isLoading = true
         errorMessage = nil
         
@@ -46,7 +48,6 @@ class HomeViewModel: ObservableObject {
                 self.errorMessage = "Không thể tải sản phẩm."
             }
             
-            self.isLoading = false
             self.isLoading = false
         }
     }

@@ -25,4 +25,9 @@ class OrderHistoryViewModel: ObservableObject {
         }
         isLoading = false
     }
+    
+    // Convenience alias for use with `.task {}` modifier
+    func loadOrders() async {
+        await fetchOrders()
+    }
 }

@@ -16,11 +16,7 @@ struct CindyHandmadeApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if hasSeenOnboarding {
-                    MainView()
-                } else {
-                    OnboardingView()
-                }
+                SplashView()
             }
             .preferredColorScheme(isDarkMode ? .dark : .light)
             .environment(\.locale, .init(identifier: language))

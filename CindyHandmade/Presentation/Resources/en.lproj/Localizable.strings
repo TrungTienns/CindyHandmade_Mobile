@@ -125,6 +125,7 @@
 "shipping_fee" = "Shipping Fee";
 "order_total" = "Order Total";
 "free_shipping" = "0 ₫";
+"order_my_order" = "My order";
 
 /* Order Status Desc */
 "status_pending_desc" = "Please pay to prepare the order.";

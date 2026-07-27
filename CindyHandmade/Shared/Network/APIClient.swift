@@ -20,6 +20,7 @@ class URLSessionAPIClient: APIClient {
         
         var request = URLRequest(url: url)
         request.httpMethod = endpoint.method.rawValue
+        request.timeoutInterval = 15 // Fail fast: show error after 15s instead of 60s default
         
         // Cấu hình Header
         var allHeaders = endpoint.headers ?? [:]

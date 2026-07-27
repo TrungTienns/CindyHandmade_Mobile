@@ -43,11 +43,11 @@ struct SignUpView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
                 
-                Spacer()
-                    .frame(height: 180)
-                
                 // Sign Up State
                 ScrollView(showsIndicators: false) {
+                    Spacer()
+                        .frame(height: 180)
+                    
                     VStack(alignment: .leading, spacing: 20) {
                         Text(LocalizedStringKey("sign_up"))
                             .font(.system(size: 40, weight: .bold))
@@ -137,6 +137,7 @@ struct SignUpView: View {
                         Spacer().frame(height: 20)
                         
                         Button(action: {
+                            HapticManager.shared.impact(style: .light)
                             viewModel.register()
                         }) {
                             if viewModel.isLoading {

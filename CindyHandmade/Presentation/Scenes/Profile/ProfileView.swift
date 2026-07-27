@@ -252,9 +252,20 @@ struct ProfileView: View {
             
             // Statistics Section
             HStack(spacing: 16) {
-                StatCard(value: "\(viewModel.user?.totalOrders ?? 12)", title: NSLocalizedString("orders", comment: ""))
-                StatCard(value: "\(viewModel.user?.totalReviews ?? 8)", title: NSLocalizedString("reviews", comment: ""))
-                StatCard(value: "\(viewModel.user?.totalPoints ?? 450)", title: NSLocalizedString("points", comment: ""))
+                NavigationLink(destination: OrderHistoryView(selectedTab: .all)) {
+                    StatCard(value: "\(viewModel.user?.totalOrders ?? 0)", title: NSLocalizedString("orders", comment: ""))
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                NavigationLink(destination: ReviewsView()) {
+                    StatCard(value: "\(viewModel.user?.totalReviews ?? 0)", title: NSLocalizedString("reviews", comment: ""))
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                NavigationLink(destination: PointsView(totalPoints: viewModel.user?.totalPoints ?? 0)) {
+                    StatCard(value: "\(viewModel.user?.totalPoints ?? 0)", title: NSLocalizedString("points", comment: ""))
+                }
+                .buttonStyle(PlainButtonStyle())
             }
             .padding(.horizontal)
             
