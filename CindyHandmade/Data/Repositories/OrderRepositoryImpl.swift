@@ -17,4 +17,10 @@ class OrderRepositoryImpl: OrderRepository {
         let endpoint = OrderEndpoint.getMyOrders
         return try await apiClient.request(endpoint: endpoint, responseType: [OrderHistoryDTO].self)
     }
+    
+    func cancelOrder(orderId: Int) async throws -> String {
+        let endpoint = OrderEndpoint.cancelOrder(id: orderId)
+        let response = try await apiClient.request(endpoint: endpoint, responseType: OrderResponseDTO.self)
+        return response.message
+    }
 }

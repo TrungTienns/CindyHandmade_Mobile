@@ -197,3 +197,48 @@
 "confirm_password" = "Confirm Password";
 "re_enter_password" = "Re-enter your password";
 "already_have_account" = "Already have an account? ";
+"order_my_orders" = "My Orders";
+"points" = "Points";
+"points_accumulated" = "Accumulated Points";
+"tier_bronze" = "Bronze";
+"tier_silver" = "Silver";
+"tier_diamond" = "Diamond";
+"points_tier_level" = "Tier %@";
+"points_needed_next_tier" = "Need %d more points for the next tier";
+"points_highest_tier" = "🎉 You have reached the highest tier!";
+"points_how_to_earn" = "How to earn points";
+"points_history" = "Points History";
+"points_buy" = "Buy Products";
+"points_10_per_product" = "10 pts / product";
+"points_review" = "Reviews";
+"points_plus_20" = "+20 points";
+"points_referral" = "Referrals";
+"points_plus_100" = "+100 points";
+
+/* Notifications */
+"notifications" = "Notifications";
+"mark_all_read" = "Mark all as read";
+"clear_all_notifications" = "Clear all notifications";
+"no_notifications" = "No notifications yet";
+"no_notifications_desc" = "You will receive notifications when\nyour order status is updated.";
+"noti_processing_title" = "Order Processing 📦";
+"noti_processing_body" = "Your order #%@ is being packed.";
+"noti_shipped_title" = "Order Shipped 🚚";
+"noti_shipped_body" = "Your order #%@ has been handed over to the carrier.";
+"noti_delivered_title" = "Order Delivered ✅";
+"noti_delivered_body" = "Your order #%@ has been delivered successfully. Thank you!";
+"noti_update_title" = "Order Update";
+"noti_update_body" = "Your order #%@ status has been updated to: %@.";
+
+/* Search History & Suggestions */
+"recent_searches" = "Recent Searches";
+"clear_history" = "Clear";
+"no_recent_searches" = "No recent searches";
+"suggestions" = "Suggestions";
+"no_products_found" = "No products found";
+
+"cancel_order" = "Cancel Order";
+"cancel_order_title" = "Confirm Cancellation";
+"cancel_order_message" = "Are you sure you want to cancel this order?";
+"confirm_cancel" = "Cancel it";
+"keep_order" = "Keep it";

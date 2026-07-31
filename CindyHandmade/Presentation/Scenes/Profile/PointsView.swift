@@ -4,26 +4,20 @@ struct PointsView: View {
     @Environment(\.presentationMode) var presentationMode
     let totalPoints: Int
     
-    // Simulated points history derived from user interactions.
-    // In a full implementation, this would come from a dedicated API endpoint.
-    private let pointsHistory: [PointEntry] = [
-        PointEntry(id: 1, icon: "cart.fill",      title: "Hoàn thành đơn hàng #1042", points: +100, date: "15/07/2025", isEarned: true),
-        PointEntry(id: 2, icon: "cart.fill",      title: "Hoàn thành đơn hàng #1038", points: +80,  date: "10/07/2025", isEarned: true),
-        PointEntry(id: 3, icon: "star.fill",      title: "Đánh giá sản phẩm",         points: +20,  date: "11/07/2025", isEarned: true),
-        PointEntry(id: 4, icon: "gift.fill",      title: "Thưởng chào mừng",          points: +50,  date: "01/07/2025", isEarned: true),
-        PointEntry(id: 5, icon: "cart.fill",      title: "Hoàn thành đơn hàng #1025", points: +120, date: "20/06/2025", isEarned: true),
-        PointEntry(id: 6, icon: "arrow.down.circle.fill", title: "Dùng điểm giảm giá", points: -200, date: "25/06/2025", isEarned: false),
-        PointEntry(id: 7, icon: "star.fill",      title: "Đánh giá sản phẩm",         points: +20,  date: "21/06/2025", isEarned: true),
-        PointEntry(id: 8, icon: "person.badge.plus.fill", title: "Giới thiệu bạn bè", points: +100, date: "15/06/2025", isEarned: true),
-    ]
+    let pointsHistory: [PointEntry]
     
     // Tier thresholds
-    private var tier: (name: String, icon: String, color: Color, nextThreshold: Int) {
+    private var tier: (nameKey: String, icon: String, colors: [Color], nextThreshold: Int) {
         switch totalPoints {
-        case 0..<200:   return ("Thành viên",   "person.fill",         .gray,       200)
-        case 200..<500: return ("Bạc",          "medal.fill",          .gray,       500)
-        case 500..<1000: return ("Vàng",        "trophy.fill",         .yellow,     1000)
-        default:         return ("Kim cương",   "diamond.fill",        .blue,       Int.max)
+        case 0..<1000:   
+            // Bronze: 0 - 999
+            return ("tier_bronze",   "medal.fill", [Color(red: 0.8, green: 0.5, blue: 0.2), Color(red: 0.6, green: 0.3, blue: 0.1)], 1000)
+        case 1000..<5000: 
+            // Silver: 1000 - 4999
+            return ("tier_silver",   "medal.fill", [Color(red: 0.85, green: 0.85, blue: 0.85), Color(red: 0.6, green: 0.6, blue: 0.6)], 5000)
+        default:         
+            // Diamond: 5000+
+            return ("tier_diamond",  "diamond.fill", [Color(red: 0.4, green: 0.8, blue: 0.9), Color(red: 0.2, green: 0.5, blue: 0.8)], Int.max)
         }
     }
     
@@ -31,14 +25,18 @@ struct PointsView: View {
         let t = tier
         if t.nextThreshold == Int.max { return 1.0 }
         let prevThreshold: Int
-        switch t.name {
-        case "Bạc":    prevThreshold = 200
-        case "Vàng":   prevThreshold = 500
-        default:       prevThreshold = 0
+        switch t.nameKey {
+        case "tier_silver":   prevThreshold = 1000
+        default:              prevThreshold = 0
         }
         let range = Double(t.nextThreshold - prevThreshold)
         let current = Double(totalPoints - prevThreshold)
         return min(max(current / range, 0), 1.0)
+    }
+    
+    // Function to localize string with arguments
+    private func localizedString(_ key: String, _ args: CVarArg...) -> String {
+        return String(format: NSLocalizedString(key, comment: ""), arguments: args)
     }
     
     var body: some View {
@@ -75,7 +73,7 @@ struct PointsView: View {
                         // Hero Points Card
                         ZStack {
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.appPrimary, Color.appPrimary.opacity(0.6)]),
+                                gradient: Gradient(colors: tier.colors),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -85,24 +83,27 @@ struct PointsView: View {
                                 Image(systemName: tier.icon)
                                     .font(.system(size: 40))
                                     .foregroundColor(.white.opacity(0.9))
+                                    .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
                                 
                                 Text("\(totalPoints)")
                                     .font(.system(size: 52, weight: .bold, design: .rounded))
                                     .foregroundColor(.white)
+                                    .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
                                 
-                                Text("điểm tích lũy")
+                                Text(LocalizedStringKey("points_accumulated"))
                                     .font(.subheadline)
-                                    .foregroundColor(.white.opacity(0.8))
+                                    .foregroundColor(.white.opacity(0.9))
                                 
                                 // Tier Badge
-                                Text("Hạng \(tier.name)")
+                                Text(localizedString("points_tier_level", NSLocalizedString(tier.nameKey, comment: "")))
                                     .font(.caption)
                                     .fontWeight(.bold)
-                                    .foregroundColor(.appPrimary)
+                                    .foregroundColor(tier.colors.last ?? .appPrimary)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 6)
                                     .background(Color.white)
                                     .clipShape(Capsule())
+                                    .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
                                 
                                 // Progress Bar to next tier
                                 if tier.nextThreshold != Int.max {
@@ -120,15 +121,16 @@ struct PointsView: View {
                                         }
                                         .frame(height: 8)
                                         
-                                        Text("Cần thêm \(tier.nextThreshold - totalPoints) điểm để lên hạng tiếp theo")
+                                        Text(localizedString("points_needed_next_tier", tier.nextThreshold - totalPoints))
                                             .font(.caption2)
-                                            .foregroundColor(.white.opacity(0.8))
+                                            .foregroundColor(.white.opacity(0.9))
                                     }
-                                    .padding(.top, 4)
+                                    .padding(.top, 8)
                                 } else {
-                                    Text("🎉 Bạn đã đạt hạng cao nhất!")
+                                    Text(LocalizedStringKey("points_highest_tier"))
                                         .font(.caption)
-                                        .foregroundColor(.white.opacity(0.8))
+                                        .foregroundColor(.white.opacity(0.9))
+                                        .padding(.top, 8)
                                 }
                             }
                             .padding(28)
@@ -137,17 +139,17 @@ struct PointsView: View {
                         
                         // How to earn points
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Cách kiếm điểm")
+                            Text(LocalizedStringKey("points_how_to_earn"))
                                 .font(.headline)
                                 .foregroundColor(.appText)
                                 .padding(.horizontal)
                             
                             HStack(spacing: 0) {
-                                earnMethodCard(icon: "cart.fill",          title: "Mua hàng",      desc: "1 điểm/1.000₫", color: .appPrimary)
+                                earnMethodCard(icon: "cart.fill",          title: NSLocalizedString("points_buy", comment: ""),      desc: NSLocalizedString("points_10_per_product", comment: ""), color: .appPrimary)
                                 Divider()
-                                earnMethodCard(icon: "star.fill",          title: "Đánh giá",      desc: "+20 điểm",       color: .yellow)
+                                earnMethodCard(icon: "star.fill",          title: NSLocalizedString("points_review", comment: ""),      desc: NSLocalizedString("points_plus_20", comment: ""),       color: .yellow)
                                 Divider()
-                                earnMethodCard(icon: "person.badge.plus",  title: "Giới thiệu",    desc: "+100 điểm",      color: .blue)
+                                earnMethodCard(icon: "person.badge.plus",  title: NSLocalizedString("points_referral", comment: ""),    desc: NSLocalizedString("points_plus_100", comment: ""),      color: .blue)
                             }
                             .padding()
                             .background(Color.appCardBackground)
@@ -157,7 +159,7 @@ struct PointsView: View {
                         
                         // History
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Lịch sử điểm")
+                            Text(LocalizedStringKey("points_history"))
                                 .font(.headline)
                                 .foregroundColor(.appText)
                                 .padding(.horizontal)
@@ -199,16 +201,6 @@ struct PointsView: View {
         }
         .frame(maxWidth: .infinity)
     }
-}
-
-// MARK: - Point Entry Model
-struct PointEntry: Identifiable {
-    let id: Int
-    let icon: String
-    let title: String
-    let points: Int
-    let date: String
-    let isEarned: Bool
 }
 
 struct PointHistoryRow: View {

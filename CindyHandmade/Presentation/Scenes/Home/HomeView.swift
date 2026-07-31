@@ -7,8 +7,10 @@ struct HomeView: View {
     @State private var showLogin = false
     @State private var categoryToExplore: String?
     @State private var showSideMenu = false
+    @State private var selectedProduct: Product? = nil
     
     @EnvironmentObject var cartManager: CartManager
+    @EnvironmentObject var notificationManager: NotificationManager
     
     var body: some View {
         ZStack {
@@ -212,11 +214,9 @@ struct HomeView: View {
                                             imageUrl: product.imageUrl,
                                             avgRating: product.avgRating
                                         )
-                                        .background(
-                                            NavigationLink(destination: ProductDetailView(product: product)) {
-                                                Color.black.opacity(0.001)
-                                            }
-                                        )
+                                        .onTapGesture {
+                                            selectedProduct = product
+                                        }
                                     }
                                 }
                             }
@@ -282,6 +282,24 @@ struct HomeView: View {
                 }
                 .padding(20)
                 .padding(.bottom, 20)
+                
+                // Hidden Navigation Link for programmatic navigation
+                NavigationLink(
+                    destination: Group {
+                        if let product = selectedProduct {
+                            ProductDetailView(product: product)
+                        } else {
+                            EmptyView()
+                        }
+                    },
+                    isActive: Binding(
+                        get: { selectedProduct != nil },
+                        set: { if !$0 { selectedProduct = nil } }
+                    )
+                ) {
+                    EmptyView()
+                }
+                .hidden()
             }
             .background(Color.appBackground)
             .refreshable {
@@ -314,39 +332,64 @@ struct HomeView: View {
             
             Spacer()
             
-            if viewModel.userName == "Guest" {
-                Button(action: {
-                    showLogin = true
-                }) {
-                    Image(systemName: "person.circle")
-                        .font(.title2)
-                        .foregroundColor(.appText)
-                }
-            } else {
-                Menu {
-                    Button(action: {
-                        selectedTab = .profile
-                    }) {
-                        Label("Hello, " + (viewModel.userName ?? "Guest"), systemImage: "person.crop.circle")
-                    }
-                    
-                    if viewModel.userRole.lowercased() == "admin" {
-                        Button(action: {
-                            // TODO: Navigate to Admin
-                        }) {
-                            Label("Admin", systemImage: "lock.shield")
+            HStack(spacing: 14) {
+                // 🔔 Notification Bell
+                NavigationLink(destination: NotificationsView()) {
+                    ZStack(alignment: .topTrailing) {
+                        Image(systemName: "bell")
+                            .font(.title2)
+                            .foregroundColor(.appText)
+                        
+                        if notificationManager.unreadCount > 0 {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.red)
+                                    .frame(width: 16, height: 16)
+                                Text(notificationManager.unreadCount > 9 ? "9+" : "\(notificationManager.unreadCount)")
+                                    .font(.system(size: 9, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
+                            .offset(x: 6, y: -6)
                         }
                     }
-                    
-                    Button(role: .destructive, action: {
-                        viewModel.logout()
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                // 👤 User Menu
+                if viewModel.userName == "Guest" {
+                    Button(action: {
+                        showLogin = true
                     }) {
-                        Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
+                        Image(systemName: "person.circle")
+                            .font(.title2)
+                            .foregroundColor(.appText)
                     }
-                } label: {
-                    Image(systemName: "person.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.appPrimary)
+                } else {
+                    Menu {
+                        Button(action: {
+                            selectedTab = .profile
+                        }) {
+                            Label("Hello, " + (viewModel.userName ?? "Guest"), systemImage: "person.crop.circle")
+                        }
+                        
+                        if viewModel.userRole.lowercased() == "admin" {
+                            Button(action: {
+                                // TODO: Navigate to Admin
+                            }) {
+                                Label("Admin", systemImage: "lock.shield")
+                            }
+                        }
+                        
+                        Button(role: .destructive, action: {
+                            viewModel.logout()
+                        }) {
+                            Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
+                        }
+                    } label: {
+                        Image(systemName: "person.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.appPrimary)
+                    }
                 }
             }
         }

@@ -9,9 +9,14 @@ class OrderHistoryViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     
     private let getMyOrdersUseCase: GetMyOrdersUseCase
+    private let cancelOrderUseCase: CancelOrderUseCase
     
-    init(getMyOrdersUseCase: GetMyOrdersUseCase = AppDIContainer.shared.makeGetMyOrdersUseCase()) {
+    init(
+        getMyOrdersUseCase: GetMyOrdersUseCase = AppDIContainer.shared.makeGetMyOrdersUseCase(),
+        cancelOrderUseCase: CancelOrderUseCase = AppDIContainer.shared.makeCancelOrderUseCase()
+    ) {
         self.getMyOrdersUseCase = getMyOrdersUseCase
+        self.cancelOrderUseCase = cancelOrderUseCase
     }
     
     func fetchOrders() async {
@@ -19,6 +24,16 @@ class OrderHistoryViewModel: ObservableObject {
         errorMessage = nil
         do {
             let fetchedOrders = try await getMyOrdersUseCase.execute()
+            
+            // 🔔 Check for status changes and trigger notifications
+            for order in fetchedOrders {
+                NotificationManager.shared.checkOrderStatusChange(
+                    orderId: order.id,
+                    newStatus: order.status ?? "unknown",
+                    orderNumber: "\(order.id)"
+                )
+            }
+            
             self.orders = fetchedOrders
         } catch {
             errorMessage = "Failed to load orders: \(error.localizedDescription)"
@@ -29,5 +44,17 @@ class OrderHistoryViewModel: ObservableObject {
     // Convenience alias for use with `.task {}` modifier
     func loadOrders() async {
         await fetchOrders()
+    }
+    
+    func cancelOrder(orderId: Int) async {
+        isLoading = true
+        errorMessage = nil
+        do {
+            let _ = try await cancelOrderUseCase.execute(orderId: orderId)
+            await fetchOrders() // Refresh list after cancelling
+        } catch {
+            errorMessage = "Lỗi khi hủy đơn hàng: \(error.localizedDescription)"
+            isLoading = false // fetchOrders handles false, but if error we need to set it here
+        }
     }
 }

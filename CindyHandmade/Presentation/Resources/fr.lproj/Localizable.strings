@@ -197,3 +197,48 @@
 "confirm_password" = "Confirmer le mot de passe";
 "re_enter_password" = "Entrez à nouveau le mot de passe";
 "already_have_account" = "Vous avez déjà un compte ? ";
+"order_my_orders" = "Mes commandes";
+"points" = "Points";
+"points_accumulated" = "Points Accumulés";
+"tier_bronze" = "Bronze";
+"tier_silver" = "Argent";
+"tier_diamond" = "Diamant";
+"points_tier_level" = "Niveau %@";
+"points_needed_next_tier" = "Encore %d points pour le niveau suivant";
+"points_highest_tier" = "🎉 Vous avez atteint le niveau maximum !";
+"points_how_to_earn" = "Comment gagner des points";
+"points_history" = "Historique des points";
+"points_buy" = "Acheter";
+"points_10_per_product" = "10 pts / produit";
+"points_review" = "Avis";
+"points_plus_20" = "+20 points";
+"points_referral" = "Parrainage";
+"points_plus_100" = "+100 points";
+
+/* Notifications */
+"notifications" = "Notifications";
+"mark_all_read" = "Tout marquer comme lu";
+"clear_all_notifications" = "Effacer toutes les notifications";
+"no_notifications" = "Aucune notification";
+"no_notifications_desc" = "Vous recevrez des notifications lorsque\nle statut de votre commande sera mis à jour.";
+"noti_processing_title" = "Commande en traitement 📦";
+"noti_processing_body" = "Votre commande n°%@ est en cours de préparation.";
+"noti_shipped_title" = "Commande expédiée 🚚";
+"noti_shipped_body" = "Votre commande n°%@ a été remise au transporteur.";
+"noti_delivered_title" = "Commande livrée ✅";
+"noti_delivered_body" = "Votre commande n°%@ a été livrée avec succès. Merci !";
+"noti_update_title" = "Mise à jour de la commande";
+"noti_update_body" = "Le statut de votre commande n°%@ a été mis à jour : %@.";
+
+/* Search History & Suggestions */
+"recent_searches" = "Recherches récentes";
+"clear_history" = "Effacer";
+"no_recent_searches" = "Aucune recherche récente";
+"suggestions" = "Suggestions";
+"no_products_found" = "Aucun produit trouvé";
+
+"cancel_order" = "Annuler la commande";
+"cancel_order_title" = "Confirmer l'annulation";
+"cancel_order_message" = "Êtes-vous sûr de vouloir annuler cette commande ?";
+"confirm_cancel" = "L'annuler";
+"keep_order" = "Garder";

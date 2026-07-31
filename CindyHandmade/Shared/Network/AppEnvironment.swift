@@ -1,10 +1,10 @@
 import Foundation
 
 enum AppEnvironment {
-    // Development Environment URL
-    // Để chạy trên máy thật (iPhone), ta cần dùng IP cục bộ của máy Mac (ví dụ: 192.168.1.5) thay vì localhost
-    static let baseURL = "http://192.168.1.5:8080/api"
+    // URL Backend (dùng localhost cho iOS Simulator)
+    static let baseURL = "http://127.0.0.1:8080/api"
     
-    // Nếu bạn muốn test trên Simulator, bạn có thể quay lại dùng localhost:
-    // static let baseURL = "http://localhost:8080/api"
+    // Nếu dùng thiết bị thật (iPhone), cần thay bằng IP mạng LAN của máy tính
+    // Hiện tại IP máy bạn đang là 192.168.1.31
+    // static let baseURL = "http://192.168.1.31:8080/api"
 }

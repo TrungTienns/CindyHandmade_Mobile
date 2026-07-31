@@ -92,7 +92,7 @@ struct OrderHistoryView: View {
                 } else {
                     let filteredOrders = viewModel.orders.filter { order in
                         if selectedTab == .all { return true }
-                        return selectedTab.apiStatuses.contains(order.status.lowercased())
+                        return selectedTab.apiStatuses.contains((order.status ?? "").lowercased())
                     }
                     
                     if filteredOrders.isEmpty {
@@ -110,7 +110,7 @@ struct OrderHistoryView: View {
                         ScrollView {
                             VStack(spacing: 16) {
                                 ForEach(filteredOrders) { order in
-                                    NavigationLink(destination: OrderDetailView(order: order)) {
+                                    NavigationLink(destination: OrderDetailView(order: order, viewModel: viewModel)) {
                                         OrderCardView(order: order)
                                     }
                                     .buttonStyle(PlainButtonStyle())
@@ -140,13 +140,13 @@ struct OrderCardView: View {
                     .font(.subheadline)
                     .fontWeight(.bold)
                 Spacer()
-                Text(LocalizedStringKey(statusText(for: order.status)))
+                Text(statusText(for: order.status ?? "unknown"))
                     .font(.caption)
                     .fontWeight(.bold)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(statusColor(for: order.status).opacity(0.1))
-                    .foregroundColor(statusColor(for: order.status))
+                    .background(statusColor(for: order.status ?? "unknown").opacity(0.1))
+                    .foregroundColor(statusColor(for: order.status ?? "unknown"))
                     .cornerRadius(4)
             }
             
@@ -173,11 +173,11 @@ struct OrderCardView: View {
                             .foregroundColor(.gray)
                         
                         HStack {
-                            Text(formatPrice(firstItem.priceAtPurchase))
+                            Text(formatPrice(firstItem.priceAtPurchase ?? 0))
                                 .font(.caption)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Text("x\(firstItem.quantity)")
+                            Text("x\(firstItem.quantity ?? 1)")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
@@ -197,7 +197,7 @@ struct OrderCardView: View {
             
             // Footer
             HStack {
-                Text(String(format: NSLocalizedString("items_count", comment: ""), order.items?.reduce(0) { $0 + $1.quantity } ?? 0))
+                Text(String(format: NSLocalizedString("items_count", comment: ""), order.items?.reduce(0) { $0 + ($1.quantity ?? 1) } ?? 0))
                     .font(.caption)
                     .foregroundColor(.gray)
                 Spacer()

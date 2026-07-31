@@ -22,7 +22,7 @@ class AuthRepositoryImpl: AuthRepository {
             tokenManager.saveToken(token)
         }
         
-        return User(id: dto.id, name: dto.name, email: dto.email, role: dto.role, avatarUrl: dto.avtImgurl, totalOrders: dto.totalOrders, totalReviews: dto.totalReviews, totalPoints: dto.totalPoints)
+        return User(id: dto.id, name: dto.name, email: dto.email, role: dto.role, avatarUrl: dto.avtImgurl, totalOrders: dto.totalOrders, totalReviews: dto.totalReviews, totalPoints: dto.totalPoints, pointsHistory: dto.pointsHistory)
     }
     
     func register(name: String, email: String, password: String) async throws -> User {
@@ -38,12 +38,12 @@ class AuthRepositoryImpl: AuthRepository {
             tokenManager.saveToken(token)
         }
         
-        return User(id: dto.id, name: dto.name, email: dto.email, role: dto.role, avatarUrl: dto.avtImgurl, totalOrders: dto.totalOrders, totalReviews: dto.totalReviews, totalPoints: dto.totalPoints)
+        return User(id: dto.id, name: dto.name, email: dto.email, role: dto.role, avatarUrl: dto.avtImgurl, totalOrders: dto.totalOrders, totalReviews: dto.totalReviews, totalPoints: dto.totalPoints, pointsHistory: dto.pointsHistory)
     }
     
     func getProfile() async throws -> User {
         let dto = try await apiClient.request(endpoint: AuthEndpoint.getMe, responseType: UserDTO.self)
-        return User(id: dto.id, name: dto.name, email: dto.email, role: dto.role, avatarUrl: dto.avtImgurl, totalOrders: dto.totalOrders, totalReviews: dto.totalReviews, totalPoints: dto.totalPoints)
+        return User(id: dto.id, name: dto.name, email: dto.email, role: dto.role, avatarUrl: dto.avtImgurl, totalOrders: dto.totalOrders, totalReviews: dto.totalReviews, totalPoints: dto.totalPoints, pointsHistory: dto.pointsHistory)
     }
     
     func updateProfile(name: String) async throws -> User {
@@ -61,7 +61,8 @@ class AuthRepositoryImpl: AuthRepository {
             avatarUrl: dto.avtImgurl,
             totalOrders: dto.totalOrders,
             totalReviews: dto.totalReviews,
-            totalPoints: dto.totalPoints
+            totalPoints: dto.totalPoints,
+            pointsHistory: dto.pointsHistory
         )
     }
 }

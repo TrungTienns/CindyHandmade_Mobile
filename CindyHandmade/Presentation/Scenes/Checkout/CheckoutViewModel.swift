@@ -181,6 +181,13 @@ class CheckoutViewModel: ObservableObject {
         do {
             let _ = try await checkoutUseCase.execute(request: request)
             checkoutSuccess = true
+            
+            // 🔔 Trigger in-app + local notification
+            NotificationManager.shared.addNotification(
+                title: "Đặt hàng thành công 🛍️",
+                body: "Đơn hàng của bạn đã được tiếp nhận. Chúng tôi sẽ xử lý ngay!",
+                type: .orderPlaced
+            )
         } catch {
             errorMessage = "Đặt hàng thất bại: \(error.localizedDescription)"
         }

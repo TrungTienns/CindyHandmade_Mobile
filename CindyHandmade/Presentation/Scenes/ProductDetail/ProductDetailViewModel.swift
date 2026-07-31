@@ -47,6 +47,13 @@ class ProductDetailViewModel: ObservableObject {
             )
             self.myReview = newReview
             self.reviews.insert(newReview, at: 0) // Prepend to list
+            
+            // 🔔 Trigger review notification
+            NotificationManager.shared.addNotification(
+                title: "Cảm ơn đánh giá của bạn ⭐",
+                body: "Đánh giá \(rating) sao của bạn đã được ghi lại thành công.",
+                type: .reviewSent
+            )
         } catch {
             submitError = error.localizedDescription
         }

@@ -1,0 +1,244 @@
+"points" = "Điểm Tích Lũy";
+"points_accumulated" = "điểm tích lũy";
+"tier_bronze" = "Đồng";
+"tier_silver" = "Bạc";
+"tier_diamond" = "Kim Cương";
+"points_tier_level" = "Hạng %@";
+"points_needed_next_tier" = "Cần thêm %d điểm để lên hạng tiếp theo";
+"points_highest_tier" = "🎉 Bạn đã đạt hạng cao nhất!";
+"points_how_to_earn" = "Cách kiếm điểm";
+"points_history" = "Lịch sử điểm";
+"points_buy" = "Mua hàng";
+"points_10_per_product" = "10 điểm / sản phẩm";
+"points_review" = "Đánh giá";
+"points_plus_20" = "+20 điểm";
+"points_referral" = "Giới thiệu";
+"points_plus_100" = "+100 điểm";
+
+/* Tab Bar */
+"home" = "Trang chủ";
+"catalog" = "Sản phẩm";
+"cart" = "Giỏ hàng";
+"profile" = "Hồ sơ";
+"wishlist" = "Yêu thích";
+
+/* Settings / Side Menu */
+"settings" = "Cài đặt";
+"dark_mode" = "Chế độ tối";
+"language" = "Ngôn ngữ";
+"version" = "Phiên bản 1.0.0";
+
+/* Home */
+"welcome_guest" = "Xin chào, Khách";
+"welcome_back" = "Chào mừng trở lại,";
+"find_cozy" = "Tìm người bạn đồng hành ấm áp của bạn.";
+"login" = "Đăng nhập";
+"all_products" = "Tất cả sản phẩm";
+"view_all" = "Xem tất cả";
+"explore_collections" = "Khám phá bộ sưu tập";
+"handmade_heart" = "Đồ thủ công\nvới trái tim";
+"added_to_cart_success" = "Thêm vào giỏ hàng thành công";
+
+/* Hero Banner */
+"new_arrivals" = "Hàng mới về";
+"banner_title" = "Bộ sưu tập\nMùa đông";
+"banner_description" = "Giữ ấm cơ thể bằng những món đồ thủ công\nvới áo len đan chun mới nhất của chúng tôi.";
+"shop_now" = "Mua ngay";
+
+/* Login */
+"sign_in" = "Đăng nhập";
+"email" = "Email";
+"password" = "Mật khẩu";
+"enter_password" = "Nhập mật khẩu của bạn";
+"forgot_password" = "Quên mật khẩu?";
+"no_account" = "Chưa có tài khoản? ";
+"sign_up" = "Đăng ký";
+
+/* All Products / Catalog */
+"categories" = "Danh mục";
+"see_all" = "Xem tất cả";
+"search_product" = "Tìm kiếm sản phẩm...";
+"crafts_that_wow" = "Sản phẩm thủ công tuyệt đẹp,\nmua ngay!";
+"loading_products" = "Đang tải sản phẩm...";
+"loading_data" = "Đang tải dữ liệu...";
+"error_fetching" = "Không thể tải dữ liệu.";
+
+/* Filter */
+"filter" = "Lọc";
+"max_price" = "Giá tối đa";
+"sort_by" = "Sắp xếp theo";
+"none" = "Không";
+"price_low_high" = "Giá: Thấp đến Cao";
+"price_high_low" = "Giá: Cao đến Thấp";
+"apply" = "Áp dụng";
+"price_range" = "Khoảng giá";
+"reset" = "Làm mới";
+
+/* Cart */
+"cart_title" = "Giỏ hàng";
+"cart_items_count" = "%d sản phẩm";
+"cart_empty" = "Giỏ hàng của bạn đang trống";
+"subtotal" = "Tạm tính";
+"delivery" = "Giao hàng";
+"delivery_free" = "Miễn phí";
+"total" = "Tổng cộng";
+"continue_checkout" = "Tiếp tục";
+"unknown_product" = "Sản phẩm không xác định";
+
+/* Profile */
+"loading_profile" = "Đang tải hồ sơ...";
+"edit_name" = "Sửa tên";
+"full_name" = "Họ và tên";
+"save" = "Lưu";
+"enter_new_name" = "Nhập tên mới của bạn";
+"view_image" = "Xem ảnh";
+"camera" = "Máy ảnh";
+"photo_library" = "Thư viện ảnh";
+"delete_avatar" = "Xóa ảnh đại diện";
+"my_orders" = "Đơn hàng của tôi";
+"orders" = "Đơn hàng";
+"reviews" = "Đánh giá";
+"to_pay" = "Chờ thanh toán";
+"to_ship" = "Chờ giao hàng";
+"to_receive" = "Đang giao";
+"to_review" = "Đánh giá";
+"shipping_address" = "Địa chỉ nhận hàng";
+"logout" = "Đăng xuất";
+"unknown_user" = "Người dùng ẩn danh";
+
+/* Wishlist */
+"wishlist_empty" = "Danh sách yêu thích của bạn đang trống.";
+
+/* Alerts */
+"logout_confirm" = "Bạn có chắc chắn muốn đăng xuất không?";
+"accept" = "Đồng ý";
+"cancel" = "Hủy";
+"error" = "Lỗi";
+"ok" = "Đồng ý";
+"error_add_cart" = "Không thể thêm vào giỏ hàng.";
+
+/* Order Management */
+"all_status" = "Tất cả";
+"completed" = "Hoàn thành";
+"cancelled" = "Đã hủy";
+"loading_orders" = "Đang tải đơn hàng...";
+"retry" = "Thử lại";
+"no_orders" = "Không tìm thấy đơn hàng nào";
+"order_num" = "Đơn hàng #%d";
+"product_type" = "Loại: %@, %@";
+"see_more_items" = "Xem thêm %d sản phẩm...";
+"items_count" = "%d sản phẩm";
+"total_amount" = "Tổng cộng:";
+"order_detail" = "Chi tiết đơn hàng";
+"shipping_info" = "Địa chỉ giao hàng";
+"no_phone" = "Không có số điện thoại";
+"no_address" = "Không có địa chỉ";
+"products" = "Sản phẩm";
+"order_code" = "Mã đơn hàng";
+"order_date" = "Ngày đặt hàng";
+"payment_method" = "Phương thức thanh toán";
+"merchandise_subtotal" = "Tổng tiền hàng";
+"shipping_fee" = "Phí vận chuyển";
+"order_total" = "Tổng thanh toán";
+"free_shipping" = "0 ₫";
+"order_my_order" = "Đơn hàng của tôi";
+
+/* Order Status Desc */
+"status_pending_desc" = "Vui lòng thanh toán để chuẩn bị đơn hàng.";
+"status_processing_desc" = "Người bán đang chuẩn bị đơn hàng của bạn.";
+"status_shipped_desc" = "Đơn hàng của bạn đang được giao.";
+"status_delivered_desc" = "Đơn hàng đã được giao thành công.";
+"status_cancelled_desc" = "Đơn hàng này đã bị hủy.";
+"status_unknown" = "Trạng thái không xác định";
+"timeline_placed" = "Đã đặt";
+"timeline_confirmed" = "Đã xác nhận";
+"timeline_shipping" = "Đang giao";
+"timeline_success" = "Thành công";
+"timeline_cancelled" = "Đã hủy đơn";
+
+/* Address Management */
+"no_saved_addresses" = "Không có địa chỉ nào được lưu";
+"add_new_address" = "Thêm địa chỉ mới";
+"address_book" = "Sổ địa chỉ";
+"select_address" = "Chọn địa chỉ";
+"default_badge" = "Mặc định";
+"select_btn" = "Chọn";
+"set_as_default" = "Đặt làm mặc định";
+"delete" = "Xóa";
+
+/* Add Address */
+"contact_info" = "Thông tin liên hệ";
+"phone_number" = "Số điện thoại *";
+"street_address" = "Địa chỉ đường (Số nhà, Đường)";
+"ward" = "Phường / Xã";
+"district" = "Quận / Huyện";
+"city" = "Tỉnh / Thành phố";
+"set_default_address" = "Đặt làm địa chỉ mặc định";
+"save_address" = "Lưu địa chỉ";
+"new_address" = "Địa chỉ mới";
+
+/* Checkout */
+"shipping_information" = "Thông tin giao hàng";
+"choose_address_book" = "Chọn từ Sổ địa chỉ";
+"select_province" = "Chọn Tỉnh / Thành phố *";
+"select_district" = "Chọn Quận / Huyện *";
+"select_ward" = "Chọn Phường / Xã *";
+"order_notes" = "Ghi chú đơn hàng (Tùy chọn)";
+"payment_method_title" = "Phương thức thanh toán";
+"cod_payment" = "Thanh toán khi nhận hàng (COD)";
+"place_order" = "ĐẶT HÀNG";
+"checkout_success" = "Đặt hàng thành công!";
+"checkout_success_desc" = "Đơn hàng của bạn đã được đặt thành công.";
+"checkout_title" = "Thanh toán";
+
+/* Onboarding */
+"onboarding_title_1" = "Khám phá đồ thủ công len";
+"onboarding_desc_1" = "Khám phá bộ sưu tập đồ thủ công ấm áp của chúng tôi được làm bằng tình yêu và sự chăm sóc.";
+"onboarding_title_2" = "Mua sắm dễ dàng";
+"onboarding_desc_2" = "Thêm sản phẩm vào giỏ hàng, thanh toán an toàn và theo dõi đơn hàng của bạn.";
+"onboarding_title_3" = "Tham gia cộng đồng";
+"onboarding_desc_3" = "Chia sẻ phong cách của bạn và kết nối với những người yêu thích đồ thủ công khác.";
+"onboarding_skip" = "Bỏ qua";
+"onboarding_next" = "Tiếp theo";
+"onboarding_get_started" = "Bắt đầu";
+
+/* Login Prompt */
+"login_required_title" = "Đăng nhập để tiếp tục";
+"login_required_desc_profile" = "Vui lòng đăng nhập để xem hồ sơ cá nhân và lịch sử đơn hàng của bạn.";
+"login_required_desc_wishlist" = "Đăng nhập để lưu những món đồ thủ công yêu thích của bạn và truy cập bất cứ lúc nào.";
+"login_now_btn" = "Đăng nhập / Đăng ký";
+
+/* Registration */
+"enter_name" = "Nguyễn Văn A";
+"confirm_password" = "Xác nhận mật khẩu";
+"re_enter_password" = "Nhập lại mật khẩu của bạn";
+"already_have_account" = "Đã có tài khoản? ";
+"order_my_orders" = "Đơn hàng của tôi";
+
+/* Notifications */
+"notifications" = "Thông báo";
+"mark_all_read" = "Đọc tất cả";
+"clear_all_notifications" = "Xóa tất cả thông báo";
+"no_notifications" = "Chưa có thông báo nào";
+"no_notifications_desc" = "Bạn sẽ nhận được thông báo khi\nđơn hàng được cập nhật trạng thái.";
+"noti_processing_title" = "Đơn hàng đang xử lý 📦";
+"noti_processing_body" = "Đơn hàng #%@ của bạn đang được đóng gói.";
+"noti_shipped_title" = "Đơn hàng đang giao 🚚";
+"noti_shipped_body" = "Đơn hàng #%@ đã được giao cho đơn vị vận chuyển.";
+"noti_delivered_title" = "Đơn hàng đã giao ✅";
+"noti_delivered_body" = "Đơn hàng #%@ đã được giao thành công. Cảm ơn bạn!";
+"noti_update_title" = "Cập nhật đơn hàng";
+"noti_update_body" = "Đơn hàng #%@ đã được cập nhật trạng thái: %@.";
+
+/* Search History & Suggestions */
+"recent_searches" = "Lịch sử tìm kiếm";
+"clear_history" = "Xóa";
+"no_recent_searches" = "Chưa có tìm kiếm nào";
+"suggestions" = "Gợi ý";
+"no_products_found" = "Không tìm thấy sản phẩm";
+
+"cancel_order" = "Hủy đơn hàng";
+"cancel_order_title" = "Xác nhận hủy";
+"cancel_order_message" = "Bạn có chắc chắn muốn hủy đơn hàng này không?";
+"confirm_cancel" = "Hủy đơn";
+"keep_order" = "Giữ lại";

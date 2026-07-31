@@ -50,22 +50,7 @@ struct ProfileView: View {
                         
                         Spacer()
                         
-                        Button(action: {
-                            // Cart action
-                        }) {
-                            ZStack(alignment: .topTrailing) {
-                                Image(systemName: "bag")
-                                    .font(.title2)
-                                    .foregroundColor(.appText)
-                                
-                                if let cart = cartManager.cart, !cart.items.isEmpty {
-                                    Circle()
-                                        .fill(Color.red)
-                                        .frame(width: 8, height: 8)
-                                        .offset(x: 2, y: -2)
-                                }
-                            }
-                        }
+                        Color.clear.frame(width: 24, height: 24)
                     }
                     .padding(.horizontal)
                     .padding(.top, 16)
@@ -253,17 +238,17 @@ struct ProfileView: View {
             // Statistics Section
             HStack(spacing: 16) {
                 NavigationLink(destination: OrderHistoryView(selectedTab: .all)) {
-                    StatCard(value: "\(viewModel.user?.totalOrders ?? 0)", title: NSLocalizedString("orders", comment: ""))
+                    StatCard(value: "\(viewModel.user?.totalOrders ?? 0)", title: "orders")
                 }
                 .buttonStyle(PlainButtonStyle())
                 
                 NavigationLink(destination: ReviewsView()) {
-                    StatCard(value: "\(viewModel.user?.totalReviews ?? 0)", title: NSLocalizedString("reviews", comment: ""))
+                    StatCard(value: "\(viewModel.user?.totalReviews ?? 0)", title: "reviews")
                 }
                 .buttonStyle(PlainButtonStyle())
                 
-                NavigationLink(destination: PointsView(totalPoints: viewModel.user?.totalPoints ?? 0)) {
-                    StatCard(value: "\(viewModel.user?.totalPoints ?? 0)", title: NSLocalizedString("points", comment: ""))
+                NavigationLink(destination: PointsView(totalPoints: viewModel.user?.totalPoints ?? 0, pointsHistory: viewModel.user?.pointsHistory ?? [])) {
+                    StatCard(value: "\(viewModel.user?.totalPoints ?? 0)", title: "points")
                 }
                 .buttonStyle(PlainButtonStyle())
             }
@@ -293,13 +278,13 @@ struct ProfileView: View {
                 }
                 
                 HStack {
-                    OrderActionIcon(icon: "wallet.pass", title: NSLocalizedString("to_pay", comment: ""), tab: .toPay)
+                    OrderActionIcon(icon: "wallet.pass", title: "to_pay", tab: .toPay)
                     Spacer()
-                    OrderActionIcon(icon: "shippingbox", title: NSLocalizedString("to_ship", comment: ""), tab: .toShip)
+                    OrderActionIcon(icon: "shippingbox", title: "to_ship", tab: .toShip)
                     Spacer()
-                    OrderActionIcon(icon: "cube.box", title: NSLocalizedString("to_receive", comment: ""), tab: .toReceive)
+                    OrderActionIcon(icon: "cube.box", title: "to_receive", tab: .toReceive)
                     Spacer()
-                    OrderActionIcon(icon: "text.bubble", title: NSLocalizedString("to_review", comment: ""), tab: .completed)
+                    OrderActionIcon(icon: "text.bubble", title: "to_review", tab: .completed)
                 }
             }
             .padding(20)
@@ -310,14 +295,14 @@ struct ProfileView: View {
             // Settings List
             VStack(spacing: 0) {
                 NavigationLink(destination: OrderHistoryView(selectedTab: .all)) {
-                    MenuRow(icon: "doc.text.magnifyingglass", title: NSLocalizedString("orders", comment: ""))
+                    MenuRow(icon: "doc.text.magnifyingglass", title: "orders")
                 }
                 Divider()
                 NavigationLink(destination: AddressBookView()) {
-                    MenuRow(icon: "mappin.and.ellipse", title: NSLocalizedString("shipping_address", comment: ""))
+                    MenuRow(icon: "mappin.and.ellipse", title: "shipping_address")
                 }
                 Divider()
-                MenuRow(icon: "rectangle.portrait.and.arrow.right", title: NSLocalizedString("logout", comment: ""), isDestructive: true) {
+                MenuRow(icon: "rectangle.portrait.and.arrow.right", title: "logout", isDestructive: true) {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7, blendDuration: 0)) {
                         showingLogoutAlert = true
                     }
@@ -335,7 +320,7 @@ struct ProfileView: View {
 
 struct StatCard: View {
     let value: String
-    let title: String
+    let title: LocalizedStringKey
     
     var body: some View {
         VStack(spacing: 6) {
@@ -407,7 +392,7 @@ struct FullScreenImageView: View {
 
 struct OrderActionIcon: View {
     let icon: String
-    let title: String
+    let title: LocalizedStringKey
     let tab: OrderTabStatus
     
     var body: some View {
@@ -433,7 +418,7 @@ struct OrderActionIcon: View {
 
 struct MenuRow: View {
     let icon: String
-    let title: String
+    let title: LocalizedStringKey
     var isDestructive: Bool = false
     var action: (() -> Void)? = nil
     

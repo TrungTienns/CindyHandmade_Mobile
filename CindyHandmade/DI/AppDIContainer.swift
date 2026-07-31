@@ -74,4 +74,8 @@ class AppDIContainer {
     func makeGetMyOrdersUseCase() -> GetMyOrdersUseCase {
         return GetMyOrdersUseCase(repository: makeOrderRepository())
     }
+    
+    func makeCancelOrderUseCase() -> CancelOrderUseCase {
+        return CancelOrderUseCase(orderRepository: makeOrderRepository())
+    }
 }

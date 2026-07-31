@@ -10,4 +10,5 @@ struct UserDTO: Decodable {
     let totalOrders: Int?
     let totalReviews: Int?
     let totalPoints: Int?
+    let pointsHistory: [PointEntry]?
 }

@@ -8,6 +8,9 @@ struct AllProductsView: View {
     @State private var currentBannerIndex = 0
     @State private var showFilterModal = false
     @State private var bannerTimer: Timer?
+    @State private var selectedProduct: Product? = nil
+    
+    @FocusState private var isSearchFocused: Bool
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -68,7 +71,15 @@ struct AllProductsView: View {
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(.gray)
-                    TextField("search_product", text: $viewModel.searchText)
+                    TextField(LocalizedStringKey("search_product"), text: $viewModel.searchText)
+                        .focused($isSearchFocused)
+                        .submitLabel(.search)
+                        .onSubmit {
+                            if !viewModel.searchText.trimmingCharacters(in: .whitespaces).isEmpty {
+                                viewModel.saveSearchTerm(viewModel.searchText)
+                            }
+                            isSearchFocused = false
+                        }
                     
                     Button(action: {
                         showFilterModal = true
@@ -86,8 +97,31 @@ struct AllProductsView: View {
                 .cornerRadius(30)
                 .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
                 .padding(.horizontal, 16)
+                .overlay(
+                    Group {
+                        if isSearchFocused {
+                            VStack(spacing: 0) {
+                                if viewModel.searchText.isEmpty {
+                                    searchHistoryView
+                                } else {
+                                    searchSuggestionsView
+                                }
+                            }
+                            .background(Color.appCardBackground)
+                            .cornerRadius(16)
+                            .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+                            .padding(.horizontal, 16)
+                            .offset(y: 70) // Push it below the search bar
+                        }
+                    },
+                    alignment: .top
+                )
+                .zIndex(2) // Ensure dropdown appears above the content below
                 
-                // Categories Header
+                // Content Below Search Bar (Categories + Grid)
+                ZStack(alignment: .top) {
+                    VStack(spacing: 24) {
+                        // Categories Header
                 HStack {
                     Text("categories")
                         .font(.custom("Georgia", size: 22))
@@ -155,15 +189,44 @@ struct AllProductsView: View {
                                 imageUrl: product.imageUrl,
                                 avgRating: product.avgRating
                             )
-                            .background(
-                                NavigationLink(destination: ProductDetailView(product: product)) {
-                                    Color.black.opacity(0.001)
-                                }
-                            )
+                            .onTapGesture {
+                                selectedProduct = product
+                            }
                         }
                     }
                     .padding(.horizontal, 16)
+                    
+                    // Hidden Navigation Link for programmatic navigation
+                    NavigationLink(
+                        destination: Group {
+                            if let product = selectedProduct {
+                                ProductDetailView(product: product)
+                            } else {
+                                EmptyView()
+                            }
+                        },
+                        isActive: Binding(
+                            get: { selectedProduct != nil },
+                            set: { if !$0 { selectedProduct = nil } }
+                        )
+                    ) {
+                        EmptyView()
+                    }
+                    .hidden()
+                    .padding(.horizontal, 16)
                 }
+            }
+            
+            if isSearchFocused {
+                Color.black.opacity(0.3)
+                    // Make it cover the rest of the screen
+                    .frame(height: UIScreen.main.bounds.height)
+                    .onTapGesture {
+                        isSearchFocused = false
+                    }
+            }
+        }
+        .zIndex(1)
             }
             .padding(.vertical, 16)
         }
@@ -189,6 +252,100 @@ struct AllProductsView: View {
         .sheet(isPresented: $showFilterModal) {
             FilterModalView(viewModel: viewModel)
                 .presentationDetents([.large])
+        }
+    }
+    
+    // MARK: - Search History View
+    private var searchHistoryView: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text(LocalizedStringKey("recent_searches"))
+                    .font(.headline)
+                    .foregroundColor(.appText)
+                
+                Spacer()
+                
+                if !viewModel.searchHistory.isEmpty {
+                    Button(action: {
+                        withAnimation {
+                            viewModel.clearSearchHistory()
+                        }
+                    }) {
+                        Text(LocalizedStringKey("clear_history"))
+                            .font(.caption)
+                            .foregroundColor(.red)
+                    }
+                }
+            }
+            .padding()
+            
+            if viewModel.searchHistory.isEmpty {
+                Text(LocalizedStringKey("no_recent_searches"))
+                    .font(.subheadline)
+                    .foregroundColor(.appTextSecondary)
+                    .padding()
+            } else {
+                ForEach(viewModel.searchHistory, id: \.self) { term in
+                    HStack {
+                        Image(systemName: "clock")
+                            .foregroundColor(.gray)
+                        Text(term)
+                            .foregroundColor(.appText)
+                        Spacer()
+                        Button(action: {
+                            viewModel.removeSearchTerm(term)
+                        }) {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.gray)
+                                .font(.caption)
+                        }
+                    }
+                    .padding()
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        viewModel.searchText = term
+                        viewModel.saveSearchTerm(term)
+                        isSearchFocused = false
+                    }
+                    Divider().padding(.horizontal)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Search Suggestions View
+    private var searchSuggestionsView: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(LocalizedStringKey("suggestions"))
+                .font(.headline)
+                .foregroundColor(.appText)
+                .padding()
+            
+            if viewModel.searchSuggestions.isEmpty {
+                Text(LocalizedStringKey("no_products_found"))
+                    .font(.subheadline)
+                    .foregroundColor(.appTextSecondary)
+                    .padding()
+            } else {
+                ForEach(viewModel.searchSuggestions) { product in
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.appPrimary)
+                        Text(product.name)
+                            .foregroundColor(.appText)
+                        Spacer()
+                    }
+                    .padding()
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        viewModel.searchText = product.name
+                        viewModel.saveSearchTerm(product.name)
+                        isSearchFocused = false
+                        selectedProduct = product
+                    }
+                    Divider().padding(.horizontal)
+                }
+            }
         }
     }
 }

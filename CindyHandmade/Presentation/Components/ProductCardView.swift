@@ -27,34 +27,35 @@ struct ProductCardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 // Wishlist Button
-                Button(action: {
-                    HapticManager.shared.impact(style: .medium)
-                    wishlistManager.toggleWishlist(for: productId)
-                }) {
-                    Image(systemName: wishlistManager.wishlistedProductIds.contains(productId) ? "heart.fill" : "heart")
-                        .foregroundColor(wishlistManager.wishlistedProductIds.contains(productId) ? .red : .white)
-                        .font(.system(size: 20))
-                        .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
-                }
-                .padding(8)
+                Image(systemName: wishlistManager.wishlistedProductIds.contains(productId) ? "heart.fill" : "heart")
+                    .foregroundColor(wishlistManager.wishlistedProductIds.contains(productId) ? .red : .white)
+                    .font(.system(size: 20))
+                    .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
+                    .padding(12) // Slightly larger hit area
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        HapticManager.shared.impact(style: .medium)
+                        wishlistManager.toggleWishlist(for: productId)
+                    }
                 
                 // Add to Cart Button
                 VStack {
                     Spacer()
                     HStack {
                         Spacer()
-                        Button(action: {
-                            CartManager.shared.addToCart(productId: productId)
-                        }) {
-                            Image(systemName: "plus")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Color.appPrimary)
-                                .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
-                        }
-                        .padding(6)
+                        Image(systemName: "plus")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Color.appPrimary)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                            .padding(6)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                HapticManager.shared.impact(style: .light)
+                                CartManager.shared.addToCart(productId: productId)
+                            }
                     }
                 }
             }
@@ -91,8 +92,11 @@ struct ProductCardView: View {
                     }
                 }
             }
+            .frame(width: 140)
         }
         .frame(width: 140)
+        .clipped()
+        .contentShape(Rectangle())
     }
 }
 

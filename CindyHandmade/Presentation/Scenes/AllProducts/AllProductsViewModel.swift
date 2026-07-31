@@ -23,6 +23,10 @@ class AllProductsViewModel: ObservableObject {
     @Published var maxPrice: Double = 20000000
     @Published var sortOption: SortOption = .none
     
+    // Search Autocomplete & History
+    @Published var searchHistory: [String] = []
+    @Published var searchSuggestions: [Product] = []
+    
     // Cached filtered result — updated by Combine pipeline with debounce
     @Published private(set) var filteredProducts: [Product] = []
     
@@ -39,7 +43,9 @@ class AllProductsViewModel: ObservableObject {
         self.fetchProductsUseCase = fetchProductsUseCase
         self.getCategoriesUseCase = getCategoriesUseCase
         
+        loadSearchHistory()
         setupFilterPipeline()
+        setupSuggestionsPipeline()
     }
     
     // MARK: - Combine Pipeline
@@ -73,6 +79,21 @@ class AllProductsViewModel: ObservableObject {
         }
         .receive(on: RunLoop.main)
         .assign(to: &$filteredProducts)
+    }
+    
+    private func setupSuggestionsPipeline() {
+        $searchText
+            .debounce(for: .milliseconds(150), scheduler: RunLoop.main)
+            .removeDuplicates()
+            .combineLatest($products)
+            .map { searchText, products -> [Product] in
+                guard !searchText.isEmpty else { return [] }
+                let lowerSearch = searchText.lowercased()
+                let matches = products.filter { $0.name.lowercased().contains(lowerSearch) }
+                return Array(matches.prefix(5)) // Limit suggestions to 5 items
+            }
+            .receive(on: RunLoop.main)
+            .assign(to: &$searchSuggestions)
     }
     
     private func applyFilters(
@@ -154,5 +175,25 @@ class AllProductsViewModel: ObservableObject {
             }
             isLoadingProducts = false
         }
+    }
+    
+    // MARK: - Search History Methods
+    func loadSearchHistory() {
+        searchHistory = SearchHistoryManager.shared.getHistory()
+    }
+    
+    func saveSearchTerm(_ term: String) {
+        SearchHistoryManager.shared.addSearchTerm(term)
+        loadSearchHistory()
+    }
+    
+    func removeSearchTerm(_ term: String) {
+        SearchHistoryManager.shared.removeSearchTerm(term)
+        loadSearchHistory()
+    }
+    
+    func clearSearchHistory() {
+        SearchHistoryManager.shared.clearHistory()
+        loadSearchHistory()
     }
 }

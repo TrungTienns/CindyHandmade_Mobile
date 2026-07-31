@@ -2,7 +2,9 @@ import SwiftUI
 
 struct OrderDetailView: View {
     let order: OrderHistoryDTO
+    @ObservedObject var viewModel: OrderHistoryViewModel
     @Environment(\.presentationMode) var presentationMode
+    @State private var showingCancelAlert = false
     
     var body: some View {
         ScrollView {
@@ -11,7 +13,7 @@ struct OrderDetailView: View {
                 orderStatusHeader
                 
                 // Timeline
-                OrderTimelineView(status: order.status)
+                OrderTimelineView(status: order.status ?? "unknown")
                 
                 // Shipping Address
                 shippingAddressCard
@@ -21,12 +23,42 @@ struct OrderDetailView: View {
                 
                 // Order Summary
                 orderSummaryCard
+                
+                // Cancel Button (Only for pending orders)
+                if order.status?.lowercased() == "pending" {
+                    Button(action: {
+                        showingCancelAlert = true
+                    }) {
+                        Text(LocalizedStringKey("cancel_order"))
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.red)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                }
             }
             .padding(.vertical)
         }
         .background(Color.appBackground.ignoresSafeArea())
         .navigationTitle(NSLocalizedString("order_detail", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
+        .alert(isPresented: $showingCancelAlert) {
+            Alert(
+                title: Text(LocalizedStringKey("cancel_order_title")),
+                message: Text(LocalizedStringKey("cancel_order_message")),
+                primaryButton: .destructive(Text(LocalizedStringKey("confirm_cancel"))) {
+                    Task {
+                        await viewModel.cancelOrder(orderId: order.id)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                },
+                secondaryButton: .cancel(Text(LocalizedStringKey("keep_order")))
+            )
+        }
     }
     
     // MARK: - Components
@@ -63,7 +95,7 @@ struct OrderDetailView: View {
             
             Divider()
             
-            Text(order.fullName)
+            Text(order.fullName ?? "")
                 .font(.subheadline)
                 .fontWeight(.bold)
             
@@ -121,7 +153,7 @@ struct OrderDetailView: View {
                             }
                             
                             HStack {
-                                Text(formatPrice(item.priceAtPurchase))
+                                Text(formatPrice(item.priceAtPurchase ?? 0))
                                     .font(.subheadline)
                                     .fontWeight(.semibold)
                                 Spacer()
@@ -157,7 +189,7 @@ struct OrderDetailView: View {
                 Text(LocalizedStringKey("order_date"))
                     .foregroundColor(.gray)
                 Spacer()
-                Text(order.createdAt.prefix(10)) // simple date formatting for demo
+                Text(order.createdAt?.prefix(10) ?? "") // simple date formatting for demo
                     .fontWeight(.semibold)
             }
             
@@ -207,7 +239,7 @@ struct OrderDetailView: View {
     // MARK: - Helpers
     
     private var statusTitle: String {
-        switch order.status.lowercased() {
+        switch order.status?.lowercased() ?? "unknown" {
         case "pending": return NSLocalizedString("to_pay", comment: "")
         case "confirm", "processing": return NSLocalizedString("to_ship", comment: "")
         case "shipped": return NSLocalizedString("to_receive", comment: "")
@@ -218,7 +250,7 @@ struct OrderDetailView: View {
     }
     
     private var statusDescription: String {
-        switch order.status.lowercased() {
+        switch order.status?.lowercased() ?? "unknown" {
         case "pending": return NSLocalizedString("status_pending_desc", comment: "")
         case "confirm", "processing": return NSLocalizedString("status_processing_desc", comment: "")
         case "shipped": return NSLocalizedString("status_shipped_desc", comment: "")
@@ -229,7 +261,7 @@ struct OrderDetailView: View {
     }
     
     private var statusIcon: String {
-        switch order.status.lowercased() {
+        switch order.status?.lowercased() ?? "unknown" {
         case "pending": return "clock.fill"
         case "confirm", "processing": return "shippingbox.fill"
         case "shipped": return "box.truck.fill"
@@ -240,7 +272,7 @@ struct OrderDetailView: View {
     }
     
     private var statusColor: Color {
-        switch order.status.lowercased() {
+        switch order.status?.lowercased() ?? "unknown" {
         case "pending": return .orange
         case "confirm", "processing": return .blue
         case "shipped": return .purple

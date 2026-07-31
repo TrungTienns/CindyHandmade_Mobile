@@ -30,7 +30,7 @@ struct AddressBookView: View {
                     
                     Spacer()
                     
-                    Text(isSelectionMode ? NSLocalizedString("select_address", comment: "") : NSLocalizedString("address_book", comment: ""))
+                    Text(isSelectionMode ? LocalizedStringKey("select_address") : LocalizedStringKey("address_book"))
                         .font(.custom("Georgia", size: 20))
                         .fontWeight(.bold)
                         .foregroundColor(.appText)

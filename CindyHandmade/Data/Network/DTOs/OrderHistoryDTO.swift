@@ -3,8 +3,8 @@ import Foundation
 struct OrderHistoryDTO: Decodable, Identifiable {
     let id: Int
     let userId: Int?
-    let totalAmount: Double
-    let fullName: String
+    let totalAmount: Double?
+    let fullName: String?
     let phone: String?
     let province: String?
     let district: String?
@@ -12,15 +12,16 @@ struct OrderHistoryDTO: Decodable, Identifiable {
     let address: String?
     let paymentMethod: String?
     let paymentStatus: String?
-    let status: String
-    let createdAt: String
+    let status: String?
+    let createdAt: String?
     let items: [OrderHistoryItemDTO]?
     
     var formattedTotalAmount: String {
+        let amount = totalAmount ?? 0
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
-        let priceString = formatter.string(from: NSNumber(value: totalAmount)) ?? "\(totalAmount)"
+        let priceString = formatter.string(from: NSNumber(value: amount)) ?? "\(amount)"
         return "\(priceString) ₫"
     }
 }
@@ -28,9 +29,9 @@ struct OrderHistoryDTO: Decodable, Identifiable {
 struct OrderHistoryItemDTO: Decodable, Identifiable {
     let id: Int
     let orderId: Int?
-    let productId: Int
-    let quantity: Int
-    let priceAtPurchase: Double
+    let productId: Int?
+    let quantity: Int?
+    let priceAtPurchase: Double?
     let size: String?
     let color: String?
     let product: ProductSimpleDTO?
@@ -38,7 +39,7 @@ struct OrderHistoryItemDTO: Decodable, Identifiable {
 
 struct ProductSimpleDTO: Decodable {
     let id: Int
-    let name: String
+    let name: String?
     let images: [String]?
     
     var imageUrl: String {

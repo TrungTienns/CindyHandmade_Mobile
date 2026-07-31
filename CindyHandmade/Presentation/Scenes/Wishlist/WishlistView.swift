@@ -5,6 +5,7 @@ struct WishlistView: View {
     @EnvironmentObject var wishlistManager: WishlistManager
     @EnvironmentObject var cartManager: CartManager
     @State private var showLogin = false
+    @State private var selectedProduct: Product? = nil
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -75,17 +76,33 @@ struct WishlistView: View {
                                         imageUrl: product.imageUrl,
                                         avgRating: product.avgRating
                                     )
-                                    .background(
-                                        NavigationLink(destination: ProductDetailView(product: product)) {
-                                            Color.black.opacity(0.001)
-                                        }
-                                    )
+                                    .onTapGesture {
+                                        selectedProduct = product
+                                    }
                                 }
                             }
                         }
                     }
                 }
                 .padding()
+                
+                // Hidden Navigation Link for programmatic navigation
+                NavigationLink(
+                    destination: Group {
+                        if let product = selectedProduct {
+                            ProductDetailView(product: product)
+                        } else {
+                            EmptyView()
+                        }
+                    },
+                    isActive: Binding(
+                        get: { selectedProduct != nil },
+                        set: { if !$0 { selectedProduct = nil } }
+                    )
+                ) {
+                    EmptyView()
+                }
+                .hidden()
             }
             .background(Color.appBackground.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
