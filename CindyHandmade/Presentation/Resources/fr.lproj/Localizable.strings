@@ -242,3 +242,41 @@
 "cancel_order_message" = "Êtes-vous sûr de vouloir annuler cette commande ?";
 "confirm_cancel" = "L'annuler";
 "keep_order" = "Garder";
+
+"timeline_placed" = "Commandé";
+"timeline_confirmed" = "Emballé";
+"timeline_shipping" = "Expédié";
+"timeline_success" = "Reçu";
+
+// --- Mot de passe oublié / Réinitialiser / Changer ---
+"forgot_password_title" = "Mot de passe oublié ?";
+"forgot_password_desc" = "Entrez votre e-mail et nous vous enverrons un code OTP à 6 chiffres.";
+"send_otp" = "Envoyer le code";
+"verify_otp" = "Vérifier OTP";
+"otp_title" = "Entrer le code OTP";
+"otp_expires_in" = "Le code expire dans";
+"otp_expired" = "Le code a expiré";
+"resend_otp" = "Renvoyer le code";
+"verify_btn" = "Vérifier";
+"reset_password" = "Réinitialiser le mot de passe";
+"reset_password_title" = "Créer un nouveau mot de passe";
+"reset_password_desc" = "Votre nouveau mot de passe doit contenir au moins 6 caractères.";
+"reset_password_btn" = "Réinitialiser";
+"reset_password_success" = "Mot de passe réinitialisé !";
+"reset_password_success_desc" = "Votre mot de passe a été mis à jour. Vous pouvez maintenant vous connecter.";
+"back_to_login" = "Retour à la connexion";
+"change_password" = "Changer le mot de passe";
+"change_password_desc" = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
+"save_password" = "Enregistrer";
+"change_password_success" = "Mot de passe changé !";
+"current_password_label" = "Mot de passe actuel";
+"new_password_label" = "Nouveau mot de passe";
+"confirm_password_label" = "Confirmer le mot de passe";
+"password_placeholder" = "Entrer le mot de passe";
+"email_label" = "E-mail";
+"email_placeholder" = "Entrer votre e-mail";
+"btn_done" = "Terminé";
+"error_email_required" = "Veuillez entrer votre e-mail.";
+"error_fill_all_fields" = "Veuillez remplir tous les champs.";
+"error_password_mismatch" = "Les mots de passe ne correspondent pas.";
+"error_password_too_short" = "Le mot de passe doit contenir au moins 6 caractères.";

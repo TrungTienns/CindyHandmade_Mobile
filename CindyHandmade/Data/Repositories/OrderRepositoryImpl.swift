@@ -23,4 +23,9 @@ class OrderRepositoryImpl: OrderRepository {
         let response = try await apiClient.request(endpoint: endpoint, responseType: OrderResponseDTO.self)
         return response.message
     }
+    
+    func getOrderById(orderId: Int) async throws -> OrderHistoryDTO {
+        let endpoint = OrderEndpoint.getOrderById(id: orderId)
+        return try await apiClient.request(endpoint: endpoint, responseType: OrderHistoryDTO.self)
+    }
 }

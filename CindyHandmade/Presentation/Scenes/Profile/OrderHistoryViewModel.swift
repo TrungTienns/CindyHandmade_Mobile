@@ -10,13 +10,16 @@ class OrderHistoryViewModel: ObservableObject {
     
     private let getMyOrdersUseCase: GetMyOrdersUseCase
     private let cancelOrderUseCase: CancelOrderUseCase
+    private let getOrderByIdUseCase: GetOrderByIdUseCase
     
     init(
         getMyOrdersUseCase: GetMyOrdersUseCase = AppDIContainer.shared.makeGetMyOrdersUseCase(),
-        cancelOrderUseCase: CancelOrderUseCase = AppDIContainer.shared.makeCancelOrderUseCase()
+        cancelOrderUseCase: CancelOrderUseCase = AppDIContainer.shared.makeCancelOrderUseCase(),
+        getOrderByIdUseCase: GetOrderByIdUseCase = AppDIContainer.shared.makeGetOrderByIdUseCase()
     ) {
         self.getMyOrdersUseCase = getMyOrdersUseCase
         self.cancelOrderUseCase = cancelOrderUseCase
+        self.getOrderByIdUseCase = getOrderByIdUseCase
     }
     
     func fetchOrders() async {
@@ -56,5 +59,9 @@ class OrderHistoryViewModel: ObservableObject {
             errorMessage = "Lỗi khi hủy đơn hàng: \(error.localizedDescription)"
             isLoading = false // fetchOrders handles false, but if error we need to set it here
         }
+    }
+    
+    func getOrderById(orderId: Int) async throws -> OrderHistoryDTO {
+        return try await getOrderByIdUseCase.execute(orderId: orderId)
     }
 }

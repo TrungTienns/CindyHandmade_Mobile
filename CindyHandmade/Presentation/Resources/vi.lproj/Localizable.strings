@@ -242,3 +242,41 @@
 "cancel_order_message" = "Bạn có chắc chắn muốn hủy đơn hàng này không?";
 "confirm_cancel" = "Hủy đơn";
 "keep_order" = "Giữ lại";
+
+"timeline_placed" = "Đặt hàng";
+"timeline_confirmed" = "Đóng gói";
+"timeline_shipping" = "Vận chuyển";
+"timeline_success" = "Đã nhận";
+
+// --- Quên / Đặt lại / Đổi mật khẩu ---
+"forgot_password_title" = "Quên mật khẩu?";
+"forgot_password_desc" = "Nhập email của bạn và chúng tôi sẽ gửi mã OTP 6 chữ số để đặt lại mật khẩu.";
+"send_otp" = "Gửi mã OTP";
+"verify_otp" = "Xác minh OTP";
+"otp_title" = "Nhập mã OTP";
+"otp_expires_in" = "Mã hết hạn sau";
+"otp_expired" = "Mã đã hết hạn";
+"resend_otp" = "Gửi lại mã";
+"verify_btn" = "Xác nhận";
+"reset_password" = "Đặt lại mật khẩu";
+"reset_password_title" = "Tạo mật khẩu mới";
+"reset_password_desc" = "Mật khẩu mới phải có ít nhất 6 ký tự.";
+"reset_password_btn" = "Đặt lại mật khẩu";
+"reset_password_success" = "Đặt lại mật khẩu thành công!";
+"reset_password_success_desc" = "Mật khẩu của bạn đã được cập nhật. Bạn có thể đăng nhập với mật khẩu mới.";
+"back_to_login" = "Quay lại đăng nhập";
+"change_password" = "Đổi mật khẩu";
+"change_password_desc" = "Mật khẩu mới phải có ít nhất 6 ký tự và khác mật khẩu hiện tại.";
+"save_password" = "Lưu thay đổi";
+"change_password_success" = "Đổi mật khẩu thành công!";
+"current_password_label" = "Mật khẩu hiện tại";
+"new_password_label" = "Mật khẩu mới";
+"confirm_password_label" = "Xác nhận mật khẩu";
+"password_placeholder" = "Nhập mật khẩu";
+"email_label" = "Email";
+"email_placeholder" = "Nhập email của bạn";
+"btn_done" = "Xong";
+"error_email_required" = "Vui lòng nhập email.";
+"error_fill_all_fields" = "Vui lòng điền đầy đủ thông tin.";
+"error_password_mismatch" = "Mật khẩu xác nhận không khớp.";
+"error_password_too_short" = "Mật khẩu phải có ít nhất 6 ký tự.";

@@ -3,6 +3,7 @@ import SwiftUI
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     @Environment(\.dismiss) var dismiss
+    @State private var showForgotPassword = false
     
     @FocusState private var focusedField: Field?
     
@@ -95,10 +96,12 @@ struct LoginView: View {
                             
                             HStack {
                                 Spacer()
-                                Text("forgot_password")
-                                    .font(.caption)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.appPrimary)
+                                Button(action: { showForgotPassword = true }) {
+                                    Text(LocalizedStringKey("forgot_password"))
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.appPrimary)
+                                }
                             }
                         }
                         
@@ -153,6 +156,9 @@ struct LoginView: View {
             }
         }
         .navigationBarHidden(true)
+        .sheet(isPresented: $showForgotPassword) {
+            ForgotPasswordView()
+        }
         .onChange(of: viewModel.loginSuccess) { success in
             if success {
                 dismiss()

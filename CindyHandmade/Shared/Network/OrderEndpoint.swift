@@ -4,6 +4,7 @@ enum OrderEndpoint: APIEndpoint {
     case checkout(request: CheckoutRequestDTO)
     case getMyOrders
     case cancelOrder(id: Int)
+    case getOrderById(id: Int)
     
     var baseURL: String {
         return AppEnvironment.baseURL
@@ -17,6 +18,8 @@ enum OrderEndpoint: APIEndpoint {
             return "/orders/myorders"
         case .cancelOrder(let id):
             return "/orders/\(id)/cancel"
+        case .getOrderById(let id):
+            return "/orders/\(id)"
         }
     }
     
@@ -24,7 +27,7 @@ enum OrderEndpoint: APIEndpoint {
         switch self {
         case .checkout:
             return .post
-        case .getMyOrders:
+        case .getMyOrders, .getOrderById:
             return .get
         case .cancelOrder:
             return .put
@@ -43,7 +46,7 @@ enum OrderEndpoint: APIEndpoint {
                 return nil
             }
             return dict
-        case .getMyOrders, .cancelOrder:
+        case .getMyOrders, .cancelOrder, .getOrderById:
             return nil
         }
     }

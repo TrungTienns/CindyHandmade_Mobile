@@ -242,3 +242,41 @@
 "cancel_order_message" = "Are you sure you want to cancel this order?";
 "confirm_cancel" = "Cancel it";
 "keep_order" = "Keep it";
+
+"timeline_placed" = "Ordered";
+"timeline_confirmed" = "Packed";
+"timeline_shipping" = "Shipped";
+"timeline_success" = "Received";
+
+// --- Forgot / Reset / Change Password ---
+"forgot_password_title" = "Forgot Password?";
+"forgot_password_desc" = "Enter your email and we'll send you a 6-digit OTP code to reset your password.";
+"send_otp" = "Send OTP";
+"verify_otp" = "Verify OTP";
+"otp_title" = "Enter OTP Code";
+"otp_expires_in" = "Code expires in";
+"otp_expired" = "Code has expired";
+"resend_otp" = "Resend Code";
+"verify_btn" = "Verify";
+"reset_password" = "Reset Password";
+"reset_password_title" = "Create New Password";
+"reset_password_desc" = "Your new password must be at least 6 characters.";
+"reset_password_btn" = "Reset Password";
+"reset_password_success" = "Password Reset Successfully!";
+"reset_password_success_desc" = "Your password has been updated. You can now log in with your new password.";
+"back_to_login" = "Back to Login";
+"change_password" = "Change Password";
+"change_password_desc" = "Your new password must be at least 6 characters and different from the current one.";
+"save_password" = "Save Changes";
+"change_password_success" = "Password Changed!";
+"current_password_label" = "Current Password";
+"new_password_label" = "New Password";
+"confirm_password_label" = "Confirm Password";
+"password_placeholder" = "Enter password";
+"email_label" = "Email";
+"email_placeholder" = "Enter your email";
+"btn_done" = "Done";
+"error_email_required" = "Please enter your email.";
+"error_fill_all_fields" = "Please fill in all fields.";
+"error_password_mismatch" = "Passwords do not match.";
+"error_password_too_short" = "Password must be at least 6 characters.";

@@ -1,10 +1,24 @@
 import SwiftUI
+import Combine
 
 struct OrderDetailView: View {
-    let order: OrderHistoryDTO
+    let initialOrder: OrderHistoryDTO
     @ObservedObject var viewModel: OrderHistoryViewModel
     @Environment(\.presentationMode) var presentationMode
     @State private var showingCancelAlert = false
+    @State private var currentOrder: OrderHistoryDTO? = nil
+    
+    // Timer for polling every 5 seconds
+    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    
+    var order: OrderHistoryDTO {
+        currentOrder ?? initialOrder
+    }
+    
+    init(order: OrderHistoryDTO, viewModel: OrderHistoryViewModel) {
+        self.initialOrder = order
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         ScrollView {
@@ -58,6 +72,25 @@ struct OrderDetailView: View {
                 },
                 secondaryButton: .cancel(Text(LocalizedStringKey("keep_order")))
             )
+        }
+        .onReceive(timer) { _ in
+            // Stop polling if cancelled or delivered
+            let status = order.status?.lowercased() ?? ""
+            if status != "cancelled" && status != "delivered" {
+                Task {
+                    if let updatedOrder = try? await viewModel.getOrderById(orderId: order.id) {
+                        DispatchQueue.main.async {
+                            // Check for notification
+                            NotificationManager.shared.checkOrderStatusChange(
+                                orderId: updatedOrder.id,
+                                newStatus: updatedOrder.status ?? "unknown",
+                                orderNumber: "\(updatedOrder.id)"
+                            )
+                            self.currentOrder = updatedOrder
+                        }
+                    }
+                }
+            }
         }
     }
     

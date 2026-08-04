@@ -65,4 +65,22 @@ class AuthRepositoryImpl: AuthRepository {
             pointsHistory: dto.pointsHistory
         )
     }
+    
+    func forgotPassword(email: String) async throws -> String {
+        struct MessageResponse: Decodable { let message: String }
+        let response = try await apiClient.request(endpoint: AuthEndpoint.forgotPassword(email: email), responseType: MessageResponse.self)
+        return response.message
+    }
+    
+    func resetPassword(email: String, otp: String, newPassword: String) async throws -> String {
+        struct MessageResponse: Decodable { let message: String }
+        let response = try await apiClient.request(endpoint: AuthEndpoint.resetPassword(email: email, otp: otp, newPassword: newPassword), responseType: MessageResponse.self)
+        return response.message
+    }
+    
+    func changePassword(currentPassword: String, newPassword: String) async throws -> String {
+        struct MessageResponse: Decodable { let message: String }
+        let response = try await apiClient.request(endpoint: AuthEndpoint.changePassword(currentPassword: currentPassword, newPassword: newPassword), responseType: MessageResponse.self)
+        return response.message
+    }
 }

@@ -302,6 +302,10 @@ struct ProfileView: View {
                     MenuRow(icon: "mappin.and.ellipse", title: "shipping_address")
                 }
                 Divider()
+                NavigationLink(destination: ChangePasswordView()) {
+                    MenuRow(icon: "key.fill", title: "change_password")
+                }
+                Divider()
                 MenuRow(icon: "rectangle.portrait.and.arrow.right", title: "logout", isDestructive: true) {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7, blendDuration: 0)) {
                         showingLogoutAlert = true
